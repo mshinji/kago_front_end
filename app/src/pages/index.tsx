@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-
-import { Context, defaultGameInfo, GameInfoType } from './Context';
-import { Template } from './Template';
+import { Context, defaultGameInfo, GameInfoType } from 'src/components/Context';
+import { Template } from 'src/components/Template';
 
 type DataType = {
   type: 'start_game' | 'start_kyoku';
