@@ -64,7 +64,7 @@ const Page = () => {
       } else if (data.type == 'other_dahai') {
         other_dahai(data.body);
       } else if (data.type == 'game_info') {
-        game_info(data.body);
+        game_info(/*data.body*/);
       } else if (data.type == 'skip') {
         skip();
       }
@@ -138,7 +138,7 @@ const Page = () => {
     await send({ type: 'next' });
   };
 
-  const game_info = async (body: GameInfoType): Promise<void> => {
+  const game_info = async (): Promise<void> => {
     // setGameInfo(body);
   };
 
