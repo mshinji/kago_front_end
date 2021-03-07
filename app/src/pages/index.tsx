@@ -11,8 +11,8 @@ const Page = () => {
   const [token, setToken] = useState<string>('');
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [modeSelected, setModeSelected] = useState<boolean>(false);
-  const url: string = process.env.BACKEND_URL || 'http://localhost:8000';
-  const ws: WebSocket = new WebSocket(`ws://${url}/ws/mahjong/`);
+  const url: string = process.env.BACKEND_URL || 'ws://http://localhost:8000';
+  const ws: WebSocket = new WebSocket(`${url}/ws/mahjong/`);
   console.log(url);
 
   ws.onmessage = (event: MessageEvent) => onmessage(event);
