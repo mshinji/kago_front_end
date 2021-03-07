@@ -27,7 +27,8 @@
     "zeit": "^1.3.0"
   },
   "scripts": {
-    "dev": "next"
+    "dev": "next",
+    "start": "next start -p $PORT"
   },
   "eslintConfig": {
     "extends": "react-app"
