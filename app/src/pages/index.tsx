@@ -11,16 +11,19 @@ const Page = () => {
   const [token, setToken] = useState<string>('');
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [modeSelected, setModeSelected] = useState<boolean>(false);
-  const url: string = process.env.BACKEND_URL || 'ws://http://localhost:8000';
+  const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
   const ws: WebSocket = new WebSocket(`${url}/ws/mahjong/`);
 
   ws.onmessage = (event: MessageEvent) => onmessage(event);
   ws.onclose = () => onclose();
 
-  const send = (data: any) => {
-    data.token = token;
+  const send = async (data: any): Promise<void> => {
+    await setToken((token) => {
+      data.token = token;
+      return token;
+    });
     ws.send(JSON.stringify(data));
-    console.log('send:', data.type);
+    console.log('send:', data);
   };
 
   const onclose = (): void => {
@@ -75,7 +78,7 @@ const Page = () => {
   };
 
   const start_kyoku = async (body: GameInfoType): Promise<void> => {
-    await setGameInfo(body);
+    setGameInfo(body);
     await send({ type: 'start_kyoku' });
   };
 
