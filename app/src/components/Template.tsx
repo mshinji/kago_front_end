@@ -25,7 +25,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  min-width: ${Constants.TemplateWidth}px;
+  min-width: ${TemplateWidth}px;
   min-height: 100%;
   background: black;
 `;
