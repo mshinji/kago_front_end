@@ -1,10 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { Constants } from './Constants';
 import { GameField } from './GameField';
 import { ModeSelect } from './ModeSelect';
 
 // import { Header } from './Header';
+
+const { TemplateWidth } = Constants;
 
 export const Template = () => {
   return (
@@ -22,6 +25,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-width: ${Constants.TemplateWidth}px;
   min-height: 100%;
   background: black;
 `;

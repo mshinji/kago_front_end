@@ -1,6 +1,7 @@
 export const Constants = {
   NormalMode: 0,
   VisibleMode: 1,
+  TemplateWidth: 780,
   GameFieldWidth: 780,
   GameFieldHeight: 780,
   TehaiWidth: 710,
@@ -16,4 +17,6 @@ export const Constants = {
   TehaiPaiHeight: 52,
   KawaPaiHeight: 48,
   HyojiPaiHeight: 40,
+  NotificationWidth: 600,
+  NotificationHeight: 70,
 };
