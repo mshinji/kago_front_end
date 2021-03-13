@@ -8,26 +8,25 @@ import { Pai } from './Pai';
 const {
   GameFieldWidth,
   GameFieldHeight,
-  TehaiWidth,
-  TehaiHeight,
-  TehaiPaiHeight,
+  HuroWidth,
+  HuroHeight,
+  HuroPaiHeight,
 } = Constants;
 
 interface TehaiProps {
   who: number;
 }
 
-export const Tehai = (props: TehaiProps) => {
-  const { gameInfo, onClickDahai } = useContext(Context);
+export const Huro = (props: TehaiProps) => {
+  const { gameInfo } = useContext(Context);
   return (
     <Wrapper who={props.who}>
-      {gameInfo.tehais[props.who].map((pai) => (
-        <Pai
-          key={pai}
-          no={pai}
-          height={TehaiPaiHeight}
-          onClick={() => onClickDahai(pai)}
-        />
+      {gameInfo.huros[props.who].map((huro) => (
+        <HuroWrapper>
+          {huro.map((pai) => (
+            <Pai key={pai} no={pai} height={HuroPaiHeight} />
+          ))}
+        </HuroWrapper>
       ))}
     </Wrapper>
   );
@@ -35,18 +34,18 @@ export const Tehai = (props: TehaiProps) => {
 
 const calcTranslateX = (who: number) =>
   [
-    (GameFieldWidth - TehaiWidth + TehaiHeight) / 2,
-    GameFieldWidth - (TehaiWidth + TehaiHeight) / 2,
-    (GameFieldWidth - TehaiWidth - TehaiHeight) / 2,
-    (TehaiHeight - TehaiWidth) / 2,
+    (GameFieldWidth - HuroWidth + HuroHeight) / 2,
+    GameFieldWidth - (HuroWidth + HuroHeight) / 2,
+    (GameFieldWidth - HuroWidth - HuroHeight) / 2,
+    (HuroHeight - HuroWidth) / 2,
   ][who];
 
 const calcTranslateY = (who: number) =>
   [
-    GameFieldHeight - TehaiHeight,
-    GameFieldHeight - TehaiWidth / 2 - TehaiHeight * 1.5,
+    GameFieldHeight - HuroHeight,
+    GameFieldHeight - HuroWidth / 2 - HuroHeight * 1.5,
     0,
-    (TehaiWidth + TehaiHeight) / 2,
+    (HuroWidth + HuroHeight) / 2,
   ][who];
 
 const calcRotateDegree = (who: number) => who * -90;
@@ -55,15 +54,20 @@ const Wrapper = styled.div.attrs((props: TehaiProps) => ({
   who: props.who,
 }))`
   display: flex;
+  justify-content: flex-end;
   align-items: center;
   position: absolute;
-  width: ${TehaiWidth}px;
-  height: ${TehaiHeight}px;
-  background: darkolivegreen;
+  width: ${HuroWidth}px;
+  height: ${HuroHeight}px;
   transform: translate(
       ${(props) => calcTranslateX(props.who)}px,
       ${(props) => calcTranslateY(props.who)}px
     )
     rotate(${(props) => calcRotateDegree(props.who)}deg);
   transform-origin: center center 0;
+`;
+
+const HuroWrapper = styled.div`
+  display: felx;
+  margin-left: 12px;
 `;

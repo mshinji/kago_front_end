@@ -27,7 +27,7 @@ export const KyokuInfo = () => {
       <Kyoku>{calcKyoku(gameInfo.kyoku)}</Kyoku>
       <Dora>
         {gameInfo.dora.map((pai) => (
-          <Pai no={pai} height={HyojiPaiHeight} />
+          <Pai key={pai} no={pai} height={HyojiPaiHeight} />
         ))}
       </Dora>
       <Kyotaku>
