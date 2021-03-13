@@ -25,22 +25,22 @@ export const Kawa = (props: KawaProps) => {
     <Wrapper who={props.who}>
       <Row>
         {gameInfo.kawas[props.who].slice(0, 6).map((pai) => (
-          <Pai no={pai} height={KawaPaiHeight} />
+          <Pai key={pai} no={pai} height={KawaPaiHeight} />
         ))}
       </Row>
       <Row>
         {gameInfo.kawas[props.who].slice(6, 12).map((pai) => (
-          <Pai no={pai} height={KawaPaiHeight} />
+          <Pai key={pai} no={pai} height={KawaPaiHeight} />
         ))}
       </Row>
       <Row>
         {gameInfo.kawas[props.who].slice(12, 18).map((pai) => (
-          <Pai no={pai} height={KawaPaiHeight} />
+          <Pai key={pai} no={pai} height={KawaPaiHeight} />
         ))}
       </Row>
       <Row>
         {gameInfo.kawas[props.who].slice(18, 24).map((pai) => (
-          <Pai no={pai} height={KawaPaiHeight} />
+          <Pai key={pai} no={pai} height={KawaPaiHeight} />
         ))}
       </Row>
     </Wrapper>

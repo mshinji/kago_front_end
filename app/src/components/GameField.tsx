@@ -2,8 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Constants } from './Constants';
+import { Huro } from './Huro';
 import { Hyoji } from './Hyoji';
 import { Kawa } from './Kawa';
+import { NoticeField } from './NoticeField';
 import { Tehai } from './Tehai';
 
 const { GameFieldHeight, GameFieldWidth } = Constants;
@@ -19,7 +21,12 @@ export const GameField = () => {
       <Kawa who={1} />
       <Kawa who={2} />
       <Kawa who={3} />
+      <Huro who={0} />
+      <Huro who={1} />
+      <Huro who={2} />
+      <Huro who={3} />
       <Hyoji />
+      <NoticeField />
     </Wrapper>
   );
 };
