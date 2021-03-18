@@ -113,6 +113,7 @@ const Page = () => {
 
   const reset_notices = async (): Promise<void> => {
     await setAnkanNotices([]);
+    await setIsAnkanNoticeNested(false);
   };
 
   const start_game = async (body: { token: string }): Promise<void> => {
@@ -166,7 +167,7 @@ const Page = () => {
         .filter((n) => !body.pai.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
       console.log(tmpGameInfo);
-      tmpGameInfo.huros[0].push([
+      tmpGameInfo.huros[0].unshift([
         body.pai[0],
         body.dummy[1],
         body.dummy[2],
