@@ -59,7 +59,6 @@ const Wrapper = styled.div.attrs((props: TehaiProps) => ({
   position: absolute;
   width: ${TehaiWidth}px;
   height: ${TehaiHeight}px;
-  background: darkolivegreen;
   transform: translate(
       ${(props) => calcTranslateX(props.who)}px,
       ${(props) => calcTranslateY(props.who)}px

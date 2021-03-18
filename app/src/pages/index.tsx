@@ -8,7 +8,7 @@ type DataType = {
 };
 
 const Page = () => {
-  // ステート定義
+  // ステート
   const [token, setToken] = useState<string>('');
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
@@ -20,9 +20,10 @@ const Page = () => {
   const [isAnkanNoticeNested, setIsAnkanNoticeNested] = useState<boolean>(
     false
   );
+
+  // WebSocket
   const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
   const ws: WebSocket = new WebSocket(`${url}/ws/mahjong/`);
-
   ws.onmessage = (event: MessageEvent) => onmessage(event);
   ws.onclose = () => onclose();
 
@@ -36,9 +37,7 @@ const Page = () => {
     console.log('send:', data);
   };
 
-  const onclose = (): void => {
-    console.log('WebSocketClosed');
-  };
+  const onclose = (): void => console.log('WebSocketClosed');
 
   // イベント関数
   const onReady = async (mode: number): Promise<void> => {
@@ -84,6 +83,10 @@ const Page = () => {
     const datas: DataType[] = JSON.parse(event.data);
     console.log('receive:', datas);
     datas.map((data) => {
+      // 通知リセット
+      reset_notices();
+
+      // 受信対応
       if (data.type === 'start_game') {
         start_game(data.body);
       } else if (data.type == 'start_kyoku') {
@@ -98,25 +101,27 @@ const Page = () => {
         my_ankan(data.body);
       } else if (data.type == 'other_ankan') {
         other_ankan(data.body);
+      } else if (data.type == 'all_open_kan_dora') {
+        all_open_kan_dora(data.body);
       } else if (data.type == 'my_dahai') {
         my_dahai(data.body);
       } else if (data.type == 'other_dahai') {
         other_dahai(data.body);
-      } else if (data.type == 'skip') {
-        skip();
       }
     });
+  };
+
+  const reset_notices = async (): Promise<void> => {
+    await setAnkanNotices([]);
   };
 
   const start_game = async (body: { token: string }): Promise<void> => {
     await setToken(body.token);
     console.log(token);
-    await send({ type: 'start_game' });
   };
 
   const start_kyoku = async (body: GameInfoType): Promise<void> => {
     setGameInfo(body);
-    await send({ type: 'start_kyoku' });
   };
 
   const my_tsumo = async (body: {
@@ -129,7 +134,6 @@ const Page = () => {
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
     });
-    await send({ type: 'next' });
   };
 
   const other_tsumo = async (body: {
@@ -143,7 +147,6 @@ const Page = () => {
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
     });
-    await send({ type: 'next' });
   };
 
   const my_before_ankan = async (body: {
@@ -159,9 +162,9 @@ const Page = () => {
     console.log('body.pai:', body.pai);
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0].filter(
-        (n) => !body.pai.includes(n)
-      );
+      tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
+        .filter((n) => !body.pai.includes(n))
+        .sort((a, b) => (a > b ? 1 : -1));
       console.log(tmpGameInfo);
       tmpGameInfo.huros[0].push([
         body.pai[0],
@@ -183,12 +186,27 @@ const Page = () => {
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
         (n) => !body.pai.includes(n)
       );
-      tmpGameInfo.huros[body.who].push([
+      tmpGameInfo.huros[body.who].unshift([
         body.pai[0],
         body.dummy[1],
         body.dummy[2],
         body.pai[3],
       ]);
+      return tmpGameInfo;
+    });
+  };
+
+  const all_open_kan_dora = async (body: {
+    pai: number;
+    dummy: number;
+    rest: number;
+  }) => {
+    await setGameInfo((preGameInfo) => {
+      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      tmpGameInfo.dora = tmpGameInfo.dora.map((n) =>
+        n == body.dummy ? body.pai : n
+      );
+      tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
     });
   };
@@ -203,7 +221,6 @@ const Page = () => {
       tmpGameInfo.kawas[0].push(body.dahai);
       return tmpGameInfo;
     });
-    await send({ type: 'next' });
   };
 
   const other_dahai = async (body: {
@@ -220,11 +237,6 @@ const Page = () => {
       tmpGameInfo.kawas[body.who].push(body.dahai);
       return tmpGameInfo;
     });
-    await send({ type: 'next' });
-  };
-
-  const skip = async (): Promise<void> => {
-    await send({ type: 'next' });
   };
 
   return (

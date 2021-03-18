@@ -23,7 +23,7 @@ export const Pai = (props: PaiProps) => {
   }
 
   return (
-    <Wrapper {...props} onClick={() => props.onClick && props.onClick()}>
+    <Wrapper {...props}>
       <img src={`/static/images/pai${no}.png`} height={props.height} />
     </Wrapper>
   );
