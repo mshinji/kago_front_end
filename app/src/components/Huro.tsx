@@ -57,6 +57,8 @@ const Wrapper = styled.div.attrs((props: TehaiProps) => ({
   justify-content: flex-end;
   align-items: center;
   position: absolute;
+  z-index: -999;
+  background: darkolivegreen;
   width: ${HuroWidth}px;
   height: ${HuroHeight}px;
   transform: translate(

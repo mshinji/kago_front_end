@@ -34,5 +34,6 @@ export const GameField = () => {
 const Wrapper = styled.div`
   width: ${GameFieldWidth}px;
   height: ${GameFieldHeight}px;
+  z-index: 0;
   background-color: darkslategray;
 `;
