@@ -29,8 +29,8 @@ export const defaultGameInfo: GameInfoType = {
 };
 
 export type NoticeType = {
-  pai: number[];
-  dummy: number[];
+  pais: number[];
+  dummies: number[];
 }[];
 
 type ContextType = {

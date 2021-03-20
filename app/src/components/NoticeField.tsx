@@ -107,18 +107,26 @@ const NestedAnkanNotice = () => {
       {isAnkanNoticeNested ? (
         ankanNotices.map((ankanNotice, key) => (
           <HuroWrapper key={key} onClick={() => onClickNestedAnkanNotice(key)}>
-            <Pai key={ankanNotice.pai[0]} no={ankanNotice.pai[0]} height={48} />
             <Pai
-              key={ankanNotice.dummy[1]}
-              no={ankanNotice.dummy[1]}
+              key={ankanNotice.pais[0]}
+              no={ankanNotice.pais[0]}
               height={48}
             />
             <Pai
-              key={ankanNotice.dummy[2]}
-              no={ankanNotice.dummy[2]}
+              key={ankanNotice.dummies[1]}
+              no={ankanNotice.dummies[1]}
               height={48}
             />
-            <Pai key={ankanNotice.pai[3]} no={ankanNotice.pai[3]} height={48} />
+            <Pai
+              key={ankanNotice.dummies[2]}
+              no={ankanNotice.dummies[2]}
+              height={48}
+            />
+            <Pai
+              key={ankanNotice.pais[3]}
+              no={ankanNotice.pais[3]}
+              height={48}
+            />
           </HuroWrapper>
         ))
       ) : (
