@@ -95,8 +95,8 @@ const Page = () => {
         my_tsumo(data.body);
       } else if (data.type == 'other_tsumo') {
         other_tsumo(data.body);
-      } else if (data.type == 'my_before_ankan') {
-        my_before_ankan(data.body);
+      } else if (data.type == 'my_ankan_notice') {
+        my_ankan_notice(data.body);
       } else if (data.type == 'my_ankan') {
         my_ankan(data.body);
       } else if (data.type == 'other_ankan') {
@@ -150,7 +150,7 @@ const Page = () => {
     });
   };
 
-  const my_before_ankan = async (body: {
+  const my_ankan_notice = async (body: {
     ankan: NoticeType;
   }): Promise<void> => {
     await setAnkanNotices(body.ankan);
