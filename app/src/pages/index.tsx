@@ -3,7 +3,7 @@ import { Context, defaultGameInfo, GameInfoType, NoticeType } from 'src/componen
 import { Template } from 'src/components/Template';
 
 type DataType = {
-  type: 'start_game' | 'start_kyoku';
+  type: string;
   body: any;
 };
 
@@ -24,8 +24,8 @@ const Page = () => {
   // WebSocket
   const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
   const ws: WebSocket = new WebSocket(`${url}/ws/mahjong/`);
-  ws.onmessage = (event: MessageEvent) => onmessage(event);
-  ws.onclose = () => onclose();
+  ws.onmessage = (event: MessageEvent) => onMessage(event);
+  ws.onclose = () => onClose();
 
   // 便利関数群
   const send = async (data: any): Promise<void> => {
@@ -37,7 +37,7 @@ const Page = () => {
     console.log('send:', data);
   };
 
-  const onclose = (): void => console.log('WebSocketClosed');
+  const onClose = (): void => console.log('WebSocketClosed...');
 
   // イベント関数
   const onReady = async (mode: number): Promise<void> => {
@@ -79,53 +79,52 @@ const Page = () => {
   };
 
   // 局進行関数群
-  const onmessage = (event: MessageEvent): void => {
+  const onMessage = (event: MessageEvent): void => {
     const datas: DataType[] = JSON.parse(event.data);
     console.log('receive:', datas);
     datas.map((data) => {
       // 通知リセット
-      reset_notices();
+      resetNotices();
 
       // 受信対応
       if (data.type === 'start_game') {
-        start_game(data.body);
+        startGame(data.body);
       } else if (data.type == 'start_kyoku') {
-        start_kyoku(data.body);
+        startKyoku(data.body);
       } else if (data.type == 'my_tsumo') {
-        my_tsumo(data.body);
+        myTsumo(data.body);
       } else if (data.type == 'other_tsumo') {
-        other_tsumo(data.body);
+        otherTsumo(data.body);
       } else if (data.type == 'my_ankan_notice') {
-        my_ankan_notice(data.body);
+        myAnkanNotice(data.body);
       } else if (data.type == 'my_ankan') {
-        my_ankan(data.body);
+        myAnkan(data.body);
       } else if (data.type == 'other_ankan') {
-        other_ankan(data.body);
+        otherAnkan(data.body);
       } else if (data.type == 'all_open_kan_dora') {
-        all_open_kan_dora(data.body);
+        allOpenKanDora(data.body);
       } else if (data.type == 'my_dahai') {
-        my_dahai(data.body);
+        myDahai(data.body);
       } else if (data.type == 'other_dahai') {
-        other_dahai(data.body);
+        otherDahai(data.body);
       }
     });
   };
 
-  const reset_notices = async (): Promise<void> => {
+  const resetNotices = async (): Promise<void> => {
     await setAnkanNotices([]);
     await setIsAnkanNoticeNested(false);
   };
 
-  const start_game = async (body: { token: string }): Promise<void> => {
+  const startGame = async (body: { token: string }): Promise<void> => {
     await setToken(body.token);
-    console.log(token);
   };
 
-  const start_kyoku = async (body: GameInfoType): Promise<void> => {
+  const startKyoku = async (body: GameInfoType): Promise<void> => {
     setGameInfo(body);
   };
 
-  const my_tsumo = async (body: {
+  const myTsumo = async (body: {
     pai: number;
     rest: number;
   }): Promise<void> => {
@@ -137,7 +136,7 @@ const Page = () => {
     });
   };
 
-  const other_tsumo = async (body: {
+  const otherTsumo = async (body: {
     dummy: number;
     who: number;
     rest: number;
@@ -150,11 +149,11 @@ const Page = () => {
     });
   };
 
-  const my_ankan_notice = async (body: NoticeType): Promise<void> => {
+  const myAnkanNotice = async (body: NoticeType): Promise<void> => {
     await setAnkanNotices(body);
   };
 
-  const my_ankan = async (body: {
+  const myAnkan = async (body: {
     pais: number[];
     dummies: number[];
   }): Promise<void> => {
@@ -163,7 +162,6 @@ const Page = () => {
       tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
         .filter((n) => !body.pais.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
-      console.log(tmpGameInfo);
       tmpGameInfo.huros[0].unshift([
         body.pais[0],
         body.dummies[1],
@@ -174,7 +172,7 @@ const Page = () => {
     });
   };
 
-  const other_ankan = async (body: {
+  const otherAnkan = async (body: {
     pais: number[];
     dummies: number[];
     who: number;
@@ -194,7 +192,7 @@ const Page = () => {
     });
   };
 
-  const all_open_kan_dora = async (body: {
+  const allOpenKanDora = async (body: {
     pai: number;
     dummy: number;
     rest: number;
@@ -209,7 +207,7 @@ const Page = () => {
     });
   };
 
-  const my_dahai = async (body: { pai: number }): Promise<void> => {
+  const myDahai = async (body: { pai: number }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0].filter(
@@ -221,7 +219,7 @@ const Page = () => {
     });
   };
 
-  const other_dahai = async (body: {
+  const otherDahai = async (body: {
     pai: number;
     dummy: number;
     who: number;
