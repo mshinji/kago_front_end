@@ -55,7 +55,7 @@ const Page = () => {
     } else if (ankanNotices.length == 1) {
       await send({
         type: 'ankan',
-        body: { ankan: ankanNotices[0].pai },
+        body: { ankan: ankanNotices[0].pais },
       });
     } else {
       setIsAnkanNoticeNested(true);
@@ -65,7 +65,7 @@ const Page = () => {
   const onClickNestedAnkanNotice = async (i: number): Promise<void> => {
     await send({
       type: 'ankan',
-      body: { ankan: ankanNotices[i].pai },
+      body: { ankan: ankanNotices[i].pais },
     });
   };
 
@@ -126,72 +126,69 @@ const Page = () => {
   };
 
   const my_tsumo = async (body: {
-    tsumo: number;
+    pai: number;
     rest: number;
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[0].push(body.tsumo);
+      tmpGameInfo.tehais[0].push(body.pai);
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
     });
   };
 
   const other_tsumo = async (body: {
-    tsumo: number;
+    dummy: number;
     who: number;
     rest: number;
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[body.who].push(body.tsumo);
+      tmpGameInfo.tehais[body.who].push(body.dummy);
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
     });
   };
 
-  const my_ankan_notice = async (body: {
-    ankan: NoticeType;
-  }): Promise<void> => {
-    await setAnkanNotices(body.ankan);
+  const my_ankan_notice = async (body: NoticeType): Promise<void> => {
+    await setAnkanNotices(body);
   };
 
   const my_ankan = async (body: {
-    pai: number[];
-    dummy: number[];
+    pais: number[];
+    dummies: number[];
   }): Promise<void> => {
-    console.log('body.pai:', body.pai);
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
-        .filter((n) => !body.pai.includes(n))
+        .filter((n) => !body.pais.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
       console.log(tmpGameInfo);
       tmpGameInfo.huros[0].unshift([
-        body.pai[0],
-        body.dummy[1],
-        body.dummy[2],
-        body.pai[3],
+        body.pais[0],
+        body.dummies[1],
+        body.dummies[2],
+        body.pais[3],
       ]);
       return tmpGameInfo;
     });
   };
 
   const other_ankan = async (body: {
-    pai: number[];
-    dummy: number[];
+    pais: number[];
+    dummies: number[];
     who: number;
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
-        (n) => !body.pai.includes(n)
+        (n) => !body.pais.includes(n)
       );
       tmpGameInfo.huros[body.who].unshift([
-        body.pai[0],
-        body.dummy[1],
-        body.dummy[2],
-        body.pai[3],
+        body.pais[0],
+        body.dummies[1],
+        body.dummies[2],
+        body.pais[3],
       ]);
       return tmpGameInfo;
     });
@@ -212,20 +209,20 @@ const Page = () => {
     });
   };
 
-  const my_dahai = async (body: { dahai: number }): Promise<void> => {
+  const my_dahai = async (body: { pai: number }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0].filter(
-        (n) => n !== body.dahai
+        (n) => n !== body.pai
       );
       tmpGameInfo.tehais[0].sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.kawas[0].push(body.dahai);
+      tmpGameInfo.kawas[0].push(body.pai);
       return tmpGameInfo;
     });
   };
 
   const other_dahai = async (body: {
-    dahai: number;
+    pai: number;
     dummy: number;
     who: number;
   }): Promise<void> => {
@@ -235,7 +232,7 @@ const Page = () => {
         (n) => n !== body.dummy
       );
       tmpGameInfo.tehais[body.who].sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.kawas[body.who].push(body.dahai);
+      tmpGameInfo.kawas[body.who].push(body.pai);
       return tmpGameInfo;
     });
   };
