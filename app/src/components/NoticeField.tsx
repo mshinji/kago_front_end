@@ -101,7 +101,6 @@ const NestedAnkanNotice = () => {
     isAnkanNoticeNested,
     onClickNestedAnkanNotice,
   } = useContext(Context);
-  console.log('ankaNotices', ankanNotices);
   return (
     <>
       {isAnkanNoticeNested ? (
