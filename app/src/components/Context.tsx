@@ -43,9 +43,9 @@ export type NoticeType = {
 
 type ContextType = {
   gameInfo: GameInfoType;
-  richiNotices: boolean;
+  richiNotice: boolean;
   ankanNotices: NoticeType;
-  minkanNotice: NoticeType;
+  minkanNotices: NoticeType;
   ponNotices: NoticeType;
   chiNotices: NoticeType;
   isAnkanNoticeNested: boolean;
@@ -55,6 +55,7 @@ type ContextType = {
   onClickNestedAnkanNotice: (i: number) => Promise<void>;
   onClickChiNotice: () => Promise<void>;
   onClickNestedChiNotice: (i: number) => Promise<void>;
+  onClickCancelNotice: () => Promise<void>;
   onClickDahai: (dahai: number) => Promise<void>;
 };
 

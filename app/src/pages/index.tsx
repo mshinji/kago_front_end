@@ -16,9 +16,9 @@ const Page = () => {
   const [token, setToken] = useState<string>('');
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
-  const [richiNotices, setRichiNotices] = useState<boolean>(false);
+  const [richiNotice, setRichiNotice] = useState<boolean>(false);
   const [ankanNotices, setAnkanNotices] = useState<NoticeType>([]);
-  const [minkanNotice, setMinkanNotice] = useState<NoticeType>([]);
+  const [minkanNotices, setMinkanNotices] = useState<NoticeType>([]);
   const [ponNotices, setPonNotices] = useState<NoticeType>([]);
   const [chiNotices, setChiNotices] = useState<NoticeType>([]);
   const [isAnkanNoticeNested, setIsAnkanNoticeNested] = useState<boolean>(
@@ -94,6 +94,13 @@ const Page = () => {
     await send({
       type: 'chi',
       body: { pai: chiNotices[i].pai, pais: chiNotices[i].pais },
+    });
+  };
+
+  const onClickCancelNotice = async (): Promise<void> => {
+    await send({
+      type: 'cancel',
+      body: {},
     });
   };
 
@@ -322,9 +329,9 @@ const Page = () => {
     <Context.Provider
       value={{
         gameInfo,
-        richiNotices,
+        richiNotice,
         ankanNotices,
-        minkanNotice,
+        minkanNotices,
         ponNotices,
         chiNotices,
         isAnkanNoticeNested,
@@ -334,6 +341,7 @@ const Page = () => {
         onClickNestedAnkanNotice,
         onClickChiNotice,
         onClickNestedChiNotice,
+        onClickCancelNotice,
         onClickDahai,
       }}
     >
