@@ -20,9 +20,11 @@ export const NoticeField = () => {
     <Wrapper>
       <NestedNoticeWrapper>
         <NestedAnkanNotice />
+        <NestedChiNotice />
       </NestedNoticeWrapper>
       <NoticeWrapper>
         <AnkanNotice />
+        <ChiNotice />
       </NoticeWrapper>
     </Wrapper>
   );
@@ -74,6 +76,16 @@ const Notice = styled.div.attrs((props: { visible: boolean }) => ({
   text-align: center;
 `;
 
+const HuroWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  background: grey;
+  opacity: 0.7;
+  margin-left: 10px;
+  padding: 5px;
+`;
+
+// 暗槓
 const AnkanNotice = () => {
   const { ankanNotices, onClickAnkanNotice } = useContext(Context);
   return (
@@ -85,15 +97,6 @@ const AnkanNotice = () => {
     </Notice>
   );
 };
-
-const HuroWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  background: grey;
-  opacity: 0.7;
-  margin-left: 10px;
-  padding: 5px;
-`;
 
 const NestedAnkanNotice = () => {
   const {
@@ -126,6 +129,47 @@ const NestedAnkanNotice = () => {
               no={ankanNotice.pais[3]}
               height={48}
             />
+          </HuroWrapper>
+        ))
+      ) : (
+        <></>
+      )}
+    </>
+  );
+};
+
+// チー
+const ChiNotice = () => {
+  const { chiNotices, onClickChiNotice } = useContext(Context);
+  return (
+    <Notice
+      visible={Object.keys(chiNotices).length >= 1}
+      onClick={() => onClickChiNotice()}
+    >
+      チー
+    </Notice>
+  );
+};
+
+const NestedChiNotice = () => {
+  const { chiNotices, isChiNoticeNested, onClickNestedChiNotice } = useContext(
+    Context
+  );
+  return (
+    <>
+      {isChiNoticeNested ? (
+        chiNotices.map((chiNotice, key) => (
+          <HuroWrapper key={key} onClick={() => onClickNestedChiNotice(key)}>
+            <Pai
+              key={chiNotice.pai}
+              no={chiNotice.pai}
+              height={48}
+              rotate={true}
+            />
+            {chiNotice.pais.map(
+              (pai) =>
+                pai != chiNotice.pai && <Pai key={pai} no={pai} height={48} />
+            )}
           </HuroWrapper>
         ))
       ) : (

@@ -1,14 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { Constants } from './Constants';
+
 interface PaiProps {
   no: number;
-  width?: number;
-  height?: number;
+  height: number;
+  rotate?: boolean;
   onClick?: () => void;
 }
 
 export const Pai = (props: PaiProps) => {
+  const { OriginalPaiHeight, OriginalPaiWidth } = Constants;
+  const height = props.height;
+  const width = (OriginalPaiWidth * height) / OriginalPaiHeight;
+
   let no;
   if (props.no >= 136) {
     no = 38;
@@ -22,21 +28,33 @@ export const Pai = (props: PaiProps) => {
     no = Math.floor(props.no / 4);
   }
 
+  const customStyle = {
+    transform: props.rotate
+      ? `rotate(270deg)
+      translate(${-(height - width) / 2}px, ${(height - width) / 2}px)`
+      : '',
+  };
+
   return (
-    <Wrapper {...props}>
-      <img src={`/static/images/pai${no}.png`} height={props.height} />
+    <Wrapper {...props} width={props.rotate ? height : width}>
+      <img
+        src={`/static/images/pai${no}.png`}
+        width={width}
+        height={props.height}
+        style={customStyle}
+      />
     </Wrapper>
   );
 };
 
-const Wrapper = styled.div.attrs((props: PaiProps) => {
-  return {
+const Wrapper = styled.div.attrs(
+  (props: { width: number; height: number }) => ({
     width: props.width,
     height: props.height,
-  };
-})`
-  width: ${(props) => props.width};
-  height: ${(props) => props.height};
+  })
+)`
+  width: ${(props) => props.width}px;
+  height: ${(props) => props.height}px;
   &:hover {
     cursor: pointer;
   }

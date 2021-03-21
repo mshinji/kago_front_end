@@ -1,9 +1,16 @@
 import { createContext } from 'react';
 
+type HuroType = {
+  type: string;
+  fromWho: number;
+  pai: number;
+  pais: number[];
+};
+
 export type GameInfoType = {
   tehais: number[][];
   kawas: number[][];
-  huros: number[][][];
+  huros: HuroType[][];
   kyoku: number;
   honba: number;
   kyotaku: number;
@@ -29,21 +36,25 @@ export const defaultGameInfo: GameInfoType = {
 };
 
 export type NoticeType = {
+  pai: number;
   pais: number[];
   dummies: number[];
 }[];
 
 type ContextType = {
   gameInfo: GameInfoType;
-  richiNotice: boolean;
+  richiNotices: boolean;
   ankanNotices: NoticeType;
   minkanNotice: NoticeType;
   ponNotice: NoticeType;
-  chiNotice: NoticeType;
+  chiNotices: NoticeType;
   isAnkanNoticeNested: boolean;
+  isChiNoticeNested: boolean;
   onReady: (mode: number) => Promise<void>;
   onClickAnkanNotice: () => Promise<void>;
   onClickNestedAnkanNotice: (i: number) => Promise<void>;
+  onClickChiNotice: () => Promise<void>;
+  onClickNestedChiNotice: (i: number) => Promise<void>;
   onClickDahai: (dahai: number) => Promise<void>;
 };
 
