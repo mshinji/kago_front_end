@@ -25,65 +25,11 @@ export const NoticeField = () => {
       <NoticeWrapper>
         <AnkanNotice />
         <ChiNotice />
+        <CancelNotice />
       </NoticeWrapper>
     </Wrapper>
   );
 };
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  position: absolute;
-  width: ${NoticeFieldWidth}px;
-  height: ${NoticeFieldHeight}px;
-  transform: translate(
-    ${(GameFieldWidth - NoticeFieldWidth) / 2}px,
-    ${GameFieldHeight - TehaiHeight - NoticeFieldHeight}px
-  );
-  transform-origin: center center 0;
-`;
-
-const NoticeWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: ${NoticeFieldWidth}px;
-  height: ${NoticeHeight}px;
-  margin: 5px 0;
-`;
-
-const NestedNoticeWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  width: ${NoticeFieldWidth}px;
-  height: ${NoticeHeight}px;
-  margin: 5px 0;
-`;
-
-const Notice = styled.div.attrs((props: { visible: boolean }) => ({
-  visible: props.visible,
-}))`
-  display: ${(props) => (props.visible ? 'block' : 'none')};
-  width: ${NoticeWidth}px;
-  height: ${NoticeHeight}px;
-  margin-left: 10px;
-  background: grey;
-  opacity: 0.7;
-  transform-origin: center center 0;
-  font-size: ${NoticeHeight - 25}px;
-  line-height: ${NoticeHeight}px;
-  color: black;
-  text-align: center;
-`;
-
-const HuroWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  background: grey;
-  opacity: 0.7;
-  margin-left: 10px;
-  padding: 5px;
-`;
 
 // 暗槓
 const AnkanNotice = () => {
@@ -178,3 +124,84 @@ const NestedChiNotice = () => {
     </>
   );
 };
+
+// キャンセル
+const CancelNotice = () => {
+  const {
+    richiNotice,
+    ankanNotices,
+    minkanNotices,
+    ponNotices,
+    chiNotices,
+    onClickCancelNotice,
+  } = useContext(Context);
+  return (
+    <Notice
+      visible={
+        richiNotice ||
+        Object.keys(ankanNotices).length >= 1 ||
+        Object.keys(minkanNotices).length >= 1 ||
+        Object.keys(ponNotices).length >= 1 ||
+        Object.keys(chiNotices).length >= 1
+      }
+      onClick={() => onClickCancelNotice()}
+    >
+      X
+    </Notice>
+  );
+};
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: absolute;
+  width: ${NoticeFieldWidth}px;
+  height: ${NoticeFieldHeight}px;
+  transform: translate(
+    ${(GameFieldWidth - NoticeFieldWidth) / 2}px,
+    ${GameFieldHeight - TehaiHeight - NoticeFieldHeight}px
+  );
+  transform-origin: center center 0;
+`;
+
+const NoticeWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: ${NoticeFieldWidth}px;
+  height: ${NoticeHeight}px;
+  margin: 5px 0;
+`;
+
+const NestedNoticeWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  width: ${NoticeFieldWidth}px;
+  height: ${NoticeHeight}px;
+  margin: 5px 0;
+`;
+
+const Notice = styled.div.attrs((props: { visible: boolean }) => ({
+  visible: props.visible,
+}))`
+  display: ${(props) => (props.visible ? 'block' : 'none')};
+  width: ${NoticeWidth}px;
+  height: ${NoticeHeight}px;
+  margin-left: 10px;
+  background: grey;
+  opacity: 0.7;
+  transform-origin: center center 0;
+  font-size: ${NoticeHeight - 25}px;
+  line-height: ${NoticeHeight}px;
+  color: black;
+  text-align: center;
+`;
+
+const HuroWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  background: grey;
+  opacity: 0.7;
+  margin-left: 10px;
+  padding: 5px;
+`;
