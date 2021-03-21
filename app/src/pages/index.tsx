@@ -19,7 +19,7 @@ const Page = () => {
   const [richiNotices, setRichiNotices] = useState<boolean>(false);
   const [ankanNotices, setAnkanNotices] = useState<NoticeType>([]);
   const [minkanNotice, setMinkanNotice] = useState<NoticeType>([]);
-  const [ponNotice, setPonNotice] = useState<NoticeType>([]);
+  const [ponNotices, setPonNotices] = useState<NoticeType>([]);
   const [chiNotices, setChiNotices] = useState<NoticeType>([]);
   const [isAnkanNoticeNested, setIsAnkanNoticeNested] = useState<boolean>(
     false
@@ -28,38 +28,30 @@ const Page = () => {
 
   useEffect(() => {
     // WebSocket
-    ws.onmessage = (event: IMessageEvent) => onMessage(event);
-    ws.onclose = () => onClose();
+    ws.onmessage = async (event: IMessageEvent) => await onMessage(event);
+    ws.onclose = async () => await onClose();
   }, []);
 
   // 便利関数群
   const send = async (data: any): Promise<void> => {
-    await setToken((token) => {
-      data.token = token;
-      return token;
-    });
+    await setToken((token) => token);
+    data.token = token;
 
-    // ws.send(JSON.stringify(data));
-    // console.log('send:', data);
-    console.log('readyState', ws.readyState);
     if (ws.readyState == 1) {
-      ws.send(JSON.stringify(data));
-      console.log('send:', data);
+      await ws.send(JSON.stringify(data));
     } else {
-      ws.onopen = () => ws.send(JSON.stringify(data));
-      console.log('send:', data);
+      ws.onopen = async () => await ws.send(JSON.stringify(data));
     }
+    console.log('send:', data);
   };
 
-  const onClose = (): void => console.log('WebSocketClosed...');
+  const onClose = async (): Promise<void> => console.log('WebSocketClosed...');
 
   // イベント関数
   const onReady = async (mode: number): Promise<void> => {
-    if (isModeSelected) {
-      return;
-    }
-    setIsModeSelected(true);
+    if (isModeSelected) return;
 
+    await setIsModeSelected(true);
     await send({ type: 'ready', mode: mode });
   };
 
@@ -72,7 +64,8 @@ const Page = () => {
         body: { pais: ankanNotices[0].pais },
       });
     } else {
-      setIsAnkanNoticeNested(true);
+      await resetIsNoticeNested();
+      await setIsAnkanNoticeNested(true);
     }
   };
 
@@ -92,7 +85,8 @@ const Page = () => {
         body: { pai: chiNotices[0].pai, pais: chiNotices[0].pais },
       });
     } else {
-      setIsChiNoticeNested(true);
+      await resetIsNoticeNested();
+      await setIsChiNoticeNested(true);
     }
   };
 
@@ -113,58 +107,61 @@ const Page = () => {
   };
 
   // 局進行関数群
-  const onMessage = (event: IMessageEvent): void => {
+  const onMessage = async (event: IMessageEvent): Promise<void> => {
     const datas: DataType[] = JSON.parse(event.data as string);
     console.log('receive:', datas);
-    datas.map((data) => {
+    datas.map(async (data) => {
       // 通知リセット
-      resetNotices();
+      await resetNotices();
 
       // 受信対応
       if (data.type === 'start_game') {
-        startGame(data.body);
+        await startGame(data.body);
       } else if (data.type == 'start_kyoku') {
-        startKyoku(data.body);
+        await startKyoku(data.body);
       } else if (data.type == 'my_tsumo') {
-        myTsumo(data.body);
+        await myTsumo(data.body);
       } else if (data.type == 'other_tsumo') {
-        otherTsumo(data.body);
+        await otherTsumo(data.body);
       } else if (data.type == 'my_ankan_notice') {
-        myAnkanNotice(data.body);
+        await myAnkanNotice(data.body);
       } else if (data.type == 'my_chi_notice') {
-        myChiNotice(data.body);
+        await myChiNotice(data.body);
       } else if (data.type == 'my_ankan') {
-        myAnkan(data.body);
+        await myAnkan(data.body);
       } else if (data.type == 'other_ankan') {
-        otherAnkan(data.body);
+        await otherAnkan(data.body);
       } else if (data.type == 'my_chi') {
-        myChi(data.body);
+        await myChi(data.body);
       } else if (data.type == 'other_chi') {
-        otherChi(data.body);
+        await otherChi(data.body);
       } else if (data.type == 'all_open_kan_dora') {
-        allOpenKanDora(data.body);
+        await allOpenKanDora(data.body);
       } else if (data.type == 'my_dahai') {
-        myDahai(data.body);
+        await myDahai(data.body);
       } else if (data.type == 'other_dahai') {
-        otherDahai(data.body);
+        await otherDahai(data.body);
       }
     });
   };
 
   const resetNotices = async (): Promise<void> => {
     await setAnkanNotices([]);
-    await setIsAnkanNoticeNested(false);
     await setChiNotices([]);
+    await resetIsNoticeNested();
+  };
+
+  const resetIsNoticeNested = async (): Promise<void> => {
+    await setIsAnkanNoticeNested(false);
     await setIsChiNoticeNested(false);
   };
 
   const startGame = async (body: { token: string }): Promise<void> => {
     await setToken(body.token);
-    console.log(token);
   };
 
   const startKyoku = async (body: GameInfoType): Promise<void> => {
-    setGameInfo(body);
+    await setGameInfo(body);
   };
 
   const myTsumo = async (body: {
@@ -328,7 +325,7 @@ const Page = () => {
         richiNotices,
         ankanNotices,
         minkanNotice,
-        ponNotice,
+        ponNotices,
         chiNotices,
         isAnkanNoticeNested,
         isChiNoticeNested,
