@@ -46,7 +46,7 @@ type ContextType = {
   richiNotices: boolean;
   ankanNotices: NoticeType;
   minkanNotice: NoticeType;
-  ponNotice: NoticeType;
+  ponNotices: NoticeType;
   chiNotices: NoticeType;
   isAnkanNoticeNested: boolean;
   isChiNoticeNested: boolean;
