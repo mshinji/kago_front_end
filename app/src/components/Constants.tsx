@@ -17,6 +17,8 @@ export const Constants = {
   PlayerInfoWidth: 150,
   PlayerInfoHeight: 50,
   // 牌の大きさ
+  OriginalPaiHeight: 45,
+  OriginalPaiWidth: 32,
   TehaiPaiHeight: 52,
   KawaPaiHeight: 48,
   HuroPaiHeight: 42,
