@@ -20,10 +20,12 @@ export const NoticeField = () => {
     <Wrapper>
       <NestedNoticeWrapper>
         <NestedAnkanNotice />
+        <NestedPonNotice />
         <NestedChiNotice />
       </NestedNoticeWrapper>
       <NoticeWrapper>
         <AnkanNotice />
+        <PonNotice />
         <ChiNotice />
         <CancelNotice />
       </NoticeWrapper>
@@ -75,6 +77,47 @@ const NestedAnkanNotice = () => {
               no={ankanNotice.pais[3]}
               height={48}
             />
+          </HuroWrapper>
+        ))
+      ) : (
+        <></>
+      )}
+    </>
+  );
+};
+
+// ポン
+const PonNotice = () => {
+  const { ponNotices, onClickPonNotice } = useContext(Context);
+  return (
+    <Notice
+      visible={Object.keys(ponNotices).length >= 1}
+      onClick={() => onClickPonNotice()}
+    >
+      ポン
+    </Notice>
+  );
+};
+
+const NestedPonNotice = () => {
+  const { ponNotices, isPonNoticeNested, onClickNestedPonNotice } = useContext(
+    Context
+  );
+  return (
+    <>
+      {isPonNoticeNested ? (
+        ponNotices.map((ponNotice, key) => (
+          <HuroWrapper key={key} onClick={() => onClickNestedPonNotice(key)}>
+            <Pai
+              key={ponNotice.pai}
+              no={ponNotice.pai}
+              height={48}
+              rotate={true}
+            />
+            {ponNotice.pais.map(
+              (pai) =>
+                pai != ponNotice.pai && <Pai key={pai} no={pai} height={48} />
+            )}
           </HuroWrapper>
         ))
       ) : (
