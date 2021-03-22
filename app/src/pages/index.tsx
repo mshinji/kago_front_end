@@ -55,9 +55,11 @@ const Page = () => {
     console.log('send:', data);
   };
 
-  const onClose = async (): Promise<void> => console.log('WebSocketClosed...');
+  const wait = async (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
 
   // イベント関数
+
   const onReady = async (mode: number): Promise<void> => {
     if (isModeSelected) return;
 
@@ -70,7 +72,7 @@ const Page = () => {
     console.log('receive:', datas);
     if (datas === []) return;
 
-    datas.map(async (data) => {
+    for (const data of datas) {
       // 通知リセット
       await resetNotices();
 
@@ -80,8 +82,10 @@ const Page = () => {
       } else if (data.type == 'start_kyoku') {
         await startKyoku(data.body);
       } else if (data.type == 'my_tsumo') {
+        await wait(500);
         await myTsumo(data.body);
       } else if (data.type == 'other_tsumo') {
+        await wait(500);
         await otherTsumo(data.body);
       } else if (data.type == 'my_ankan_notice') {
         await myAnkanNotice(data.body);
@@ -96,22 +100,27 @@ const Page = () => {
       } else if (data.type == 'my_pon') {
         await myPon(data.body);
       } else if (data.type == 'other_pon') {
+        await wait(500);
         await otherPon(data.body);
       } else if (data.type == 'my_chi') {
         await myChi(data.body);
       } else if (data.type == 'other_chi') {
+        await wait(500);
         await otherChi(data.body);
       } else if (data.type == 'all_open_kan_dora') {
         await allOpenKanDora(data.body);
       } else if (data.type == 'my_dahai') {
         await myDahai(data.body);
       } else if (data.type == 'other_dahai') {
+        await wait(500);
         await otherDahai(data.body);
       }
-    });
+    }
 
     await send({ type: 'next' });
   };
+
+  const onClose = async (): Promise<void> => console.log('WebSocketClosed...');
 
   const onClickAnkanNotice = async (): Promise<void> => {
     if (ankanNotices.length == 0) {
@@ -262,7 +271,7 @@ const Page = () => {
       tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
         .filter((n) => !body.pais.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[0].unshift({
+      tmpGameInfo.huros[0].push({
         type: 'ankan',
         fromWho: 0,
         pai: -1,
@@ -283,7 +292,7 @@ const Page = () => {
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
         (n) => !body.pais.includes(n)
       );
-      tmpGameInfo.huros[body.who].unshift({
+      tmpGameInfo.huros[body.who].push({
         type: 'ankan',
         fromWho: body.who,
         pai: -1,
@@ -303,7 +312,7 @@ const Page = () => {
       tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
         .filter((n) => !body.pais.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[0].unshift({
+      tmpGameInfo.huros[0].push({
         type: 'pon',
         fromWho: 3,
         pai: body.pai,
@@ -324,7 +333,7 @@ const Page = () => {
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
         .filter((n) => !body.pais.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[body.who].unshift({
+      tmpGameInfo.huros[body.who].push({
         type: 'pon',
         fromWho: (body.who - 1) % 4,
         pai: body.pai,
@@ -344,7 +353,7 @@ const Page = () => {
       tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
         .filter((n) => !body.pais.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[0].unshift({
+      tmpGameInfo.huros[0].push({
         type: 'chi',
         fromWho: 3,
         pai: body.pai,
@@ -365,7 +374,7 @@ const Page = () => {
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[0]
         .filter((n) => !body.pais.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[body.who].unshift({
+      tmpGameInfo.huros[body.who].push({
         type: 'chi',
         fromWho: (body.who - 1) % 4,
         pai: body.pai,

@@ -21,46 +21,49 @@ export const Huro = (props: TehaiProps) => {
   const { gameInfo } = useContext(Context);
   return (
     <Wrapper who={props.who}>
-      {gameInfo.huros[props.who].map((huro) => (
-        <HuroWrapper>
-          {huro.type == 'ankan' &&
-            huro.pais.map((pai) => (
-              <Pai key={pai} no={pai} height={HuroPaiHeight} />
-            ))}
-          {huro.type == 'pon' && (
-            <>
-              <Pai
-                key={huro.pai}
-                no={huro.pai}
-                height={HuroPaiHeight}
-                rotate={true}
-              />
-              {huro.pais.map(
-                (pai) =>
-                  pai != huro.pai && (
-                    <Pai key={pai} no={pai} height={HuroPaiHeight} />
-                  )
-              )}
-            </>
-          )}
-          {huro.type == 'chi' && (
-            <>
-              <Pai
-                key={huro.pai}
-                no={huro.pai}
-                height={HuroPaiHeight}
-                rotate={true}
-              />
-              {huro.pais.map(
-                (pai) =>
-                  pai != huro.pai && (
-                    <Pai key={pai} no={pai} height={HuroPaiHeight} />
-                  )
-              )}
-            </>
-          )}
-        </HuroWrapper>
-      ))}
+      {gameInfo.huros[props.who]
+        .slice(0)
+        .reverse()
+        .map((huro, key) => (
+          <HuroWrapper key={key}>
+            {huro.type == 'ankan' &&
+              huro.pais.map((pai) => (
+                <Pai key={pai} no={pai} height={HuroPaiHeight} />
+              ))}
+            {huro.type == 'pon' && (
+              <>
+                <Pai
+                  key={huro.pai}
+                  no={huro.pai}
+                  height={HuroPaiHeight}
+                  rotate={'true'}
+                />
+                {huro.pais.map(
+                  (pai) =>
+                    pai != huro.pai && (
+                      <Pai key={pai} no={pai} height={HuroPaiHeight} />
+                    )
+                )}
+              </>
+            )}
+            {huro.type == 'chi' && (
+              <>
+                <Pai
+                  key={huro.pai}
+                  no={huro.pai}
+                  height={HuroPaiHeight}
+                  rotate={'true'}
+                />
+                {huro.pais.map(
+                  (pai) =>
+                    pai != huro.pai && (
+                      <Pai key={pai} no={pai} height={HuroPaiHeight} />
+                    )
+                )}
+              </>
+            )}
+          </HuroWrapper>
+        ))}
     </Wrapper>
   );
 };
