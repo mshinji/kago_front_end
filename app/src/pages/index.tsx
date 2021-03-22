@@ -42,8 +42,10 @@ const Page = () => {
 
   // 便利関数群
   const send = async (data: any): Promise<void> => {
-    await setToken((token) => token);
-    data.token = token;
+    await setToken((token) => {
+      data.token = token;
+      return token;
+    });
 
     if (ws.readyState == 1) {
       await ws.send(JSON.stringify(data));
@@ -61,6 +63,54 @@ const Page = () => {
 
     await setIsModeSelected(true);
     await send({ type: 'ready', mode: mode });
+  };
+
+  const onMessage = async (event: IMessageEvent): Promise<void> => {
+    const datas: DataType[] = JSON.parse(event.data as string);
+    console.log('receive:', datas);
+    if (datas === []) return;
+
+    datas.map(async (data) => {
+      // 通知リセット
+      await resetNotices();
+
+      // 受信対応
+      if (data.type === 'start_game') {
+        await startGame(data.body);
+      } else if (data.type == 'start_kyoku') {
+        await startKyoku(data.body);
+      } else if (data.type == 'my_tsumo') {
+        await myTsumo(data.body);
+      } else if (data.type == 'other_tsumo') {
+        await otherTsumo(data.body);
+      } else if (data.type == 'my_ankan_notice') {
+        await myAnkanNotice(data.body);
+      } else if (data.type == 'my_pon_notice') {
+        await myPonNotice(data.body);
+      } else if (data.type == 'my_chi_notice') {
+        await myChiNotice(data.body);
+      } else if (data.type == 'my_ankan') {
+        await myAnkan(data.body);
+      } else if (data.type == 'other_ankan') {
+        await otherAnkan(data.body);
+      } else if (data.type == 'my_pon') {
+        await myPon(data.body);
+      } else if (data.type == 'other_pon') {
+        await otherPon(data.body);
+      } else if (data.type == 'my_chi') {
+        await myChi(data.body);
+      } else if (data.type == 'other_chi') {
+        await otherChi(data.body);
+      } else if (data.type == 'all_open_kan_dora') {
+        await allOpenKanDora(data.body);
+      } else if (data.type == 'my_dahai') {
+        await myDahai(data.body);
+      } else if (data.type == 'other_dahai') {
+        await otherDahai(data.body);
+      }
+    });
+
+    await send({ type: 'next' });
   };
 
   const onClickAnkanNotice = async (): Promise<void> => {
@@ -143,50 +193,6 @@ const Page = () => {
   };
 
   // 局進行関数群
-  const onMessage = async (event: IMessageEvent): Promise<void> => {
-    const datas: DataType[] = JSON.parse(event.data as string);
-    console.log('receive:', datas);
-    datas.map(async (data) => {
-      // 通知リセット
-      await resetNotices();
-
-      // 受信対応
-      if (data.type === 'start_game') {
-        await startGame(data.body);
-      } else if (data.type == 'start_kyoku') {
-        await startKyoku(data.body);
-      } else if (data.type == 'my_tsumo') {
-        await myTsumo(data.body);
-      } else if (data.type == 'other_tsumo') {
-        await otherTsumo(data.body);
-      } else if (data.type == 'my_ankan_notice') {
-        await myAnkanNotice(data.body);
-      } else if (data.type == 'my_pon_notice') {
-        await myPonNotice(data.body);
-      } else if (data.type == 'my_chi_notice') {
-        await myChiNotice(data.body);
-      } else if (data.type == 'my_ankan') {
-        await myAnkan(data.body);
-      } else if (data.type == 'other_ankan') {
-        await otherAnkan(data.body);
-      } else if (data.type == 'my_pon') {
-        await myPon(data.body);
-      } else if (data.type == 'other_pon') {
-        await otherPon(data.body);
-      } else if (data.type == 'my_chi') {
-        await myChi(data.body);
-      } else if (data.type == 'other_chi') {
-        await otherChi(data.body);
-      } else if (data.type == 'all_open_kan_dora') {
-        await allOpenKanDora(data.body);
-      } else if (data.type == 'my_dahai') {
-        await myDahai(data.body);
-      } else if (data.type == 'other_dahai') {
-        await otherDahai(data.body);
-      }
-    });
-  };
-
   const resetNotices = async (): Promise<void> => {
     await setAnkanNotices([]);
     await setPonNotices([]);
@@ -202,6 +208,7 @@ const Page = () => {
 
   const startGame = async (body: { token: string }): Promise<void> => {
     await setToken(body.token);
+    console.log('body.token', body.token);
   };
 
   const startKyoku = async (body: GameInfoType): Promise<void> => {
