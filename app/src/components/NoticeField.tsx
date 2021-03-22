@@ -112,7 +112,7 @@ const NestedPonNotice = () => {
               key={ponNotice.pai}
               no={ponNotice.pai}
               height={48}
-              rotate={true}
+              rotate={'true'}
             />
             {ponNotice.pais.map(
               (pai) =>
@@ -153,7 +153,7 @@ const NestedChiNotice = () => {
               key={chiNotice.pai}
               no={chiNotice.pai}
               height={48}
-              rotate={true}
+              rotate={'true'}
             />
             {chiNotice.pais.map(
               (pai) =>
