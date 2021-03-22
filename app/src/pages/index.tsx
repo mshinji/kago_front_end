@@ -25,6 +25,7 @@ const Page = () => {
     false
   );
   const [isChiNoticeNested, setIsChiNoticeNested] = useState<boolean>(false);
+  const [isPonNoticeNested, setIsPonNoticeNested] = useState<boolean>(false);
 
   useEffect(() => {
     // WebSocket
@@ -73,6 +74,27 @@ const Page = () => {
     await send({
       type: 'ankan',
       body: { pais: ankanNotices[i].pais },
+    });
+  };
+
+  const onClickPonNotice = async (): Promise<void> => {
+    if (ponNotices.length == 0) {
+      return;
+    } else if (ponNotices.length == 1) {
+      await send({
+        type: 'pon',
+        body: { pai: ponNotices[0].pai, pais: ponNotices[0].pais },
+      });
+    } else {
+      await resetIsNoticeNested();
+      await setIsPonNoticeNested(true);
+    }
+  };
+
+  const onClickNestedPonNotice = async (i: number): Promise<void> => {
+    await send({
+      type: 'pon',
+      body: { pai: ponNotices[i].pai, pais: ponNotices[i].pais },
     });
   };
 
@@ -132,12 +154,18 @@ const Page = () => {
         await otherTsumo(data.body);
       } else if (data.type == 'my_ankan_notice') {
         await myAnkanNotice(data.body);
+      } else if (data.type == 'my_pon_notice') {
+        await myPonNotice(data.body);
       } else if (data.type == 'my_chi_notice') {
         await myChiNotice(data.body);
       } else if (data.type == 'my_ankan') {
         await myAnkan(data.body);
       } else if (data.type == 'other_ankan') {
         await otherAnkan(data.body);
+      } else if (data.type == 'my_pon') {
+        await myPon(data.body);
+      } else if (data.type == 'other_pon') {
+        await otherPon(data.body);
       } else if (data.type == 'my_chi') {
         await myChi(data.body);
       } else if (data.type == 'other_chi') {
@@ -154,12 +182,14 @@ const Page = () => {
 
   const resetNotices = async (): Promise<void> => {
     await setAnkanNotices([]);
+    await setPonNotices([]);
     await setChiNotices([]);
     await resetIsNoticeNested();
   };
 
   const resetIsNoticeNested = async (): Promise<void> => {
     await setIsAnkanNoticeNested(false);
+    await setIsPonNoticeNested(false);
     await setIsChiNoticeNested(false);
   };
 
@@ -200,6 +230,10 @@ const Page = () => {
     await setAnkanNotices(body);
   };
 
+  const myPonNotice = async (body: NoticeType): Promise<void> => {
+    await setPonNotices(body);
+  };
+
   const myChiNotice = async (body: NoticeType): Promise<void> => {
     await setChiNotices(body);
   };
@@ -238,6 +272,45 @@ const Page = () => {
         fromWho: body.who,
         pai: -1,
         pais: [body.pais[0], body.dummies[1], body.dummies[2], body.pais[3]],
+      });
+      return tmpGameInfo;
+    });
+  };
+
+  const myPon = async (body: {
+    pai: number;
+    pais: number[];
+  }): Promise<void> => {
+    await setGameInfo((preGameInfo) => {
+      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
+        .filter((n) => !body.pais.includes(n))
+        .sort((a, b) => (a > b ? 1 : -1));
+      tmpGameInfo.huros[0].unshift({
+        type: 'pon',
+        fromWho: 3,
+        pai: body.pai,
+        pais: [body.pai].concat(body.pais.filter((pai) => pai != body.pai)),
+      });
+      return tmpGameInfo;
+    });
+  };
+
+  const otherPon = async (body: {
+    pai: number;
+    pais: number[];
+    who: number;
+  }): Promise<void> => {
+    await setGameInfo((preGameInfo) => {
+      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
+        .filter((n) => !body.pais.includes(n))
+        .sort((a, b) => (a > b ? 1 : -1));
+      tmpGameInfo.huros[body.who].unshift({
+        type: 'pon',
+        fromWho: (body.who - 1) % 4,
+        pai: body.pai,
+        pais: [body.pai].concat(body.pais.filter((pai) => pai != body.pai)),
       });
       return tmpGameInfo;
     });
@@ -335,10 +408,13 @@ const Page = () => {
         ponNotices,
         chiNotices,
         isAnkanNoticeNested,
+        isPonNoticeNested,
         isChiNoticeNested,
         onReady,
         onClickAnkanNotice,
         onClickNestedAnkanNotice,
+        onClickPonNotice,
+        onClickNestedPonNotice,
         onClickChiNotice,
         onClickNestedChiNotice,
         onClickCancelNotice,

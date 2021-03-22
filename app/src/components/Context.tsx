@@ -50,9 +50,12 @@ type ContextType = {
   chiNotices: NoticeType;
   isAnkanNoticeNested: boolean;
   isChiNoticeNested: boolean;
+  isPonNoticeNested: boolean;
   onReady: (mode: number) => Promise<void>;
   onClickAnkanNotice: () => Promise<void>;
   onClickNestedAnkanNotice: (i: number) => Promise<void>;
+  onClickPonNotice: () => Promise<void>;
+  onClickNestedPonNotice: (i: number) => Promise<void>;
   onClickChiNotice: () => Promise<void>;
   onClickNestedChiNotice: (i: number) => Promise<void>;
   onClickCancelNotice: () => Promise<void>;

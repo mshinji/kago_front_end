@@ -27,6 +27,22 @@ export const Huro = (props: TehaiProps) => {
             huro.pais.map((pai) => (
               <Pai key={pai} no={pai} height={HuroPaiHeight} />
             ))}
+          {huro.type == 'pon' && (
+            <>
+              <Pai
+                key={huro.pai}
+                no={huro.pai}
+                height={HuroPaiHeight}
+                rotate={true}
+              />
+              {huro.pais.map(
+                (pai) =>
+                  pai != huro.pai && (
+                    <Pai key={pai} no={pai} height={HuroPaiHeight} />
+                  )
+              )}
+            </>
+          )}
           {huro.type == 'chi' && (
             <>
               <Pai
