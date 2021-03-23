@@ -87,16 +87,10 @@ const Page = () => {
       } else if (data.type === 'start_kyoku') {
         await startKyoku(data.body);
       } else if (data.type === 'my_tsumo') {
-        if (myPrevAction !== 'cancel') {
-          await wait(300);
-          console.log('myPrecAction', myPrevAction);
-        }
+        if (myPrevAction !== 'cancel') await wait(300);
         await myTsumo(data.body);
       } else if (data.type === 'other_tsumo') {
-        if (myPrevAction !== 'cancel') {
-          await wait(300);
-          console.log('myPrecAction', myPrevAction);
-        }
+        if (myPrevAction !== 'cancel') await wait(300);
         await otherTsumo(data.body);
       } else if (data.type === 'my_ankan_notice') {
         await myAnkanNotice(data.body);
