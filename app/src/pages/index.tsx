@@ -11,16 +11,18 @@ type DataType = {
 
 const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`);
-const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
-const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
-const richiSound = new Howl({ src: ['/static/sounds/richi.m4a'] });
+// const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
+// const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
+// const richiSound = new Howl({ src: ['/static/sounds/richi.m4a'] });
 const kanSound = new Howl({ src: ['/static/sounds/kan.m4a'] });
 const ponSound = new Howl({ src: ['/static/sounds/pon.m4a'] });
 const chiSound = new Howl({ src: ['/static/sounds/chi.m4a'] });
 
 const Page = () => {
+  // 変数
+  let token = '';
+
   // ステート
-  const [token, setToken] = useState<string>('');
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
   const [richiNotice, setRichiNotice] = useState<boolean>(false);
@@ -38,14 +40,15 @@ const Page = () => {
     // WebSocket
     ws.onmessage = async (event: IMessageEvent) => await onMessage(event);
     ws.onclose = async () => await onClose();
+
+    // ビルド用
+    setRichiNotice(false);
+    setMinkanNotices([]);
   }, []);
 
   // 便利関数群
   const send = async (data: any): Promise<void> => {
-    await setToken((token) => {
-      data.token = token;
-      return token;
-    });
+    data.token = token;
 
     if (ws.readyState == 1) {
       await ws.send(JSON.stringify(data));
@@ -82,10 +85,10 @@ const Page = () => {
       } else if (data.type == 'start_kyoku') {
         await startKyoku(data.body);
       } else if (data.type == 'my_tsumo') {
-        await wait(500);
+        await wait(300);
         await myTsumo(data.body);
       } else if (data.type == 'other_tsumo') {
-        await wait(500);
+        await wait(300);
         await otherTsumo(data.body);
       } else if (data.type == 'my_ankan_notice') {
         await myAnkanNotice(data.body);
@@ -100,19 +103,19 @@ const Page = () => {
       } else if (data.type == 'my_pon') {
         await myPon(data.body);
       } else if (data.type == 'other_pon') {
-        await wait(500);
+        await wait(300);
         await otherPon(data.body);
       } else if (data.type == 'my_chi') {
         await myChi(data.body);
       } else if (data.type == 'other_chi') {
-        await wait(500);
+        await wait(300);
         await otherChi(data.body);
       } else if (data.type == 'all_open_kan_dora') {
         await allOpenKanDora(data.body);
       } else if (data.type == 'my_dahai') {
         await myDahai(data.body);
       } else if (data.type == 'other_dahai') {
-        await wait(500);
+        await wait(300);
         await otherDahai(data.body);
       }
     }
@@ -216,8 +219,7 @@ const Page = () => {
   };
 
   const startGame = async (body: { token: string }): Promise<void> => {
-    await setToken(body.token);
-    console.log('body.token', body.token);
+    token = body.token;
   };
 
   const startKyoku = async (body: GameInfoType): Promise<void> => {

@@ -36,7 +36,7 @@ export const Huro = (props: TehaiProps) => {
                   key={huro.pai}
                   no={huro.pai}
                   height={HuroPaiHeight}
-                  rotate={'true'}
+                  isRotation={true}
                 />
                 {huro.pais.map(
                   (pai) =>
@@ -52,7 +52,7 @@ export const Huro = (props: TehaiProps) => {
                   key={huro.pai}
                   no={huro.pai}
                   height={HuroPaiHeight}
-                  rotate={'true'}
+                  isRotation={true}
                 />
                 {huro.pais.map(
                   (pai) =>

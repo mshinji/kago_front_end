@@ -6,7 +6,7 @@ import { Constants } from './Constants';
 interface PaiProps {
   no: number;
   height: number;
-  rotate?: boolean;
+  isRotation?: boolean;
   onClick?: () => void;
 }
 
@@ -29,14 +29,14 @@ export const Pai = (props: PaiProps) => {
   }
 
   const customStyle = {
-    transform: props.rotate
+    transform: props.isRotation
       ? `rotate(270deg)
       translate(${-(height - width) / 2}px, ${(height - width) / 2}px)`
       : '',
   };
 
   return (
-    <Wrapper {...props} width={props.rotate ? height : width}>
+    <Wrapper {...props} width={props.isRotation ? height : width}>
       <img
         src={`/static/images/pai${no}.png`}
         width={width}
@@ -48,9 +48,9 @@ export const Pai = (props: PaiProps) => {
 };
 
 const Wrapper = styled.div.attrs(
-  (props: { width: number; height: number }) => ({
-    width: props.width,
-    height: props.height,
+  ({ width, height }: { width: number; height: number }) => ({
+    width: width,
+    height: height,
   })
 )`
   width: ${(props) => props.width}px;
