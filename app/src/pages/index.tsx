@@ -2,6 +2,7 @@ import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
 import { Context, defaultGameInfo, GameInfoType, NoticeType } from 'src/components/Context';
 import { Template } from 'src/components/Template';
+import { isParenthesizedExpression } from 'typescript';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
 
 type DataType = {
@@ -25,7 +26,7 @@ let myPrevAction = '';
 const Page = () => {
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
-  const [richiNotice, setRichiNotice] = useState<boolean>(false);
+  const [richiNotices, setRichiNotices] = useState<NoticeType>([]);
   const [ankanNotices, setAnkanNotices] = useState<NoticeType>([]);
   const [minkanNotices, setMinkanNotices] = useState<NoticeType>([]);
   const [ponNotices, setPonNotices] = useState<NoticeType>([]);
@@ -42,7 +43,6 @@ const Page = () => {
     ws.onclose = async () => await onClose();
 
     // ビルド用
-    setRichiNotice(false);
     setMinkanNotices([]);
   }, []);
 
@@ -77,48 +77,52 @@ const Page = () => {
     if (datas.length === 0) return;
     console.log('receive:', datas);
 
-    for (const data of datas) {
-      // 通知リセット
-      await resetNotices();
+    // 通知リセット
+    await resetNotices();
 
+    for (const data of datas) {
       // 受信対応
       if (data.type === 'start_game') {
         await startGame(data.body);
-      } else if (data.type === 'start_kyoku') {
+      }
+      if (data.type === 'start_kyoku_message') {
         await startKyoku(data.body);
-      } else if (data.type === 'my_tsumo') {
+      }
+      if (data.type === 'tsumo_message') {
         if (myPrevAction !== 'cancel') await wait(300);
-        await myTsumo(data.body);
-      } else if (data.type === 'other_tsumo') {
-        if (myPrevAction !== 'cancel') await wait(300);
-        await otherTsumo(data.body);
-      } else if (data.type === 'my_ankan_notice') {
-        await myAnkanNotice(data.body);
-      } else if (data.type === 'my_pon_notice') {
-        await myPonNotice(data.body);
-      } else if (data.type === 'my_chi_notice') {
-        await myChiNotice(data.body);
-      } else if (data.type === 'my_ankan') {
-        await myAnkan(data.body);
-      } else if (data.type === 'other_ankan') {
-        await otherAnkan(data.body);
-      } else if (data.type === 'my_pon') {
-        await myPon(data.body);
-      } else if (data.type === 'other_pon') {
+        await tsumo(data.body);
+      }
+      if (data.type === 'richi_notice_message') {
+        await richiNotice(data.body);
+      }
+      if (data.type === 'ankan_notice_message') {
+        await ankanNotice(data.body);
+      }
+      if (data.type === 'pon_notice_message') {
+        await ponNotice(data.body);
+      }
+      if (data.type === 'chi_notice_message') {
+        await chiNotice(data.body);
+      }
+      if (data.type === 'ankan_message') {
+        await ankan(data.body);
+      }
+      if (data.type === 'pon_message') {
         await wait(300);
-        await otherPon(data.body);
-      } else if (data.type === 'my_chi') {
-        await myChi(data.body);
-      } else if (data.type === 'other_chi') {
+        await pon(data.body);
         await wait(300);
-        await otherChi(data.body);
-      } else if (data.type === 'all_open_kan_dora') {
-        await allOpenKanDora(data.body);
-      } else if (data.type === 'my_dahai') {
-        await myDahai(data.body);
-      } else if (data.type === 'other_dahai') {
+      }
+      if (data.type === 'chi_message') {
         await wait(300);
-        await otherDahai(data.body);
+        await chi(data.body);
+        await wait(300);
+      }
+      if (data.type === 'open_dora_message') {
+        await openDora(data.body);
+      }
+      if (data.type === 'dahai_message') {
+        if (data.body.who != 0) await wait(300);
+        await dahai(data.body);
       }
     }
 
@@ -208,6 +212,7 @@ const Page = () => {
 
   // 局進行関数群
   const resetNotices = async (): Promise<void> => {
+    await setRichiNotices([]);
     await setAnkanNotices([]);
     await setPonNotices([]);
     await setChiNotices([]);
@@ -228,64 +233,37 @@ const Page = () => {
     await setGameInfo(body);
   };
 
-  const myTsumo = async (body: {
+  const tsumo = async (body: {
     pai: number;
-    rest: number;
-  }): Promise<void> => {
-    await setGameInfo((preGameInfo) => {
-      let tmpGameInfo = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[0].push(body.pai);
-      tmpGameInfo.rest = body.rest;
-      return tmpGameInfo;
-    });
-  };
-
-  const otherTsumo = async (body: {
     dummy: number;
     who: number;
     rest: number;
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[body.who].push(body.dummy);
+      tmpGameInfo.tehais[body.who].push(body?.pai || body?.dummy);
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
     });
   };
 
-  const myAnkanNotice = async (body: NoticeType): Promise<void> => {
+  const richiNotice = async (body: NoticeType): Promise<void> => {
+    await setRichiNotices(body);
+  };
+
+  const ankanNotice = async (body: NoticeType): Promise<void> => {
     await setAnkanNotices(body);
   };
 
-  const myPonNotice = async (body: NoticeType): Promise<void> => {
+  const ponNotice = async (body: NoticeType): Promise<void> => {
     await setPonNotices(body);
   };
 
-  const myChiNotice = async (body: NoticeType): Promise<void> => {
+  const chiNotice = async (body: NoticeType): Promise<void> => {
     await setChiNotices(body);
   };
 
-  const myAnkan = async (body: {
-    pais: number[];
-    dummies: number[];
-  }): Promise<void> => {
-    await kanSound.play();
-    await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
-        .filter((n) => !body.pais.includes(n))
-        .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[0].push({
-        type: 'ankan',
-        fromWho: 0,
-        pai: -1,
-        pais: [body.pais[0], body.dummies[1], body.dummies[2], body.pais[3]],
-      });
-      return tmpGameInfo;
-    });
-  };
-
-  const otherAnkan = async (body: {
+  const ankan = async (body: {
     pais: number[];
     dummies: number[];
     who: number;
@@ -294,101 +272,70 @@ const Page = () => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
-        (n) => !body.pais.includes(n)
+        (n) => !body.pais.includes(n) && !body.dummies.includes(n)
       );
       tmpGameInfo.huros[body.who].push({
         type: 'ankan',
-        fromWho: body.who,
         pai: -1,
         pais: [body.pais[0], body.dummies[1], body.dummies[2], body.pais[3]],
+        who: body.who,
+        fromWho: body.who,
       });
       return tmpGameInfo;
     });
   };
 
-  const myPon = async (body: {
+  const pon = async (body: {
     pai: number;
     pais: number[];
-  }): Promise<void> => {
-    await ponSound.play();
-    await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
-        .filter((n) => !body.pais.includes(n))
-        .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[0].push({
-        type: 'pon',
-        fromWho: 3,
-        pai: body.pai,
-        pais: [body.pai].concat(body.pais.filter((pai) => pai != body.pai)),
-      });
-      return tmpGameInfo;
-    });
-  };
-
-  const otherPon = async (body: {
-    pai: number;
-    pais: number[];
+    dummies: number[];
     who: number;
+    fromWho: number;
   }): Promise<void> => {
     await ponSound.play();
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
-        .filter((n) => !body.pais.includes(n))
+        .filter((n) => !body.pais.includes(n) && !body.dummies.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
+      tmpGameInfo.kawas[body.fromWho].pop();
       tmpGameInfo.huros[body.who].push({
         type: 'pon',
-        fromWho: (body.who - 1) % 4,
         pai: body.pai,
-        pais: [body.pai].concat(body.pais.filter((pai) => pai != body.pai)),
+        pais: body.pais,
+        who: body.who,
+        fromWho: body.fromWho,
       });
       return tmpGameInfo;
     });
   };
 
-  const myChi = async (body: {
+  const chi = async (body: {
     pai: number;
     pais: number[];
-  }): Promise<void> => {
-    await chiSound.play();
-    await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0]
-        .filter((n) => !body.pais.includes(n))
-        .sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.huros[0].push({
-        type: 'chi',
-        fromWho: 3,
-        pai: body.pai,
-        pais: [body.pai].concat(body.pais.filter((pai) => pai != body.pai)),
-      });
-      return tmpGameInfo;
-    });
-  };
-
-  const otherChi = async (body: {
-    pai: number;
-    pais: number[];
+    dummies: number[];
     who: number;
+    fromWho: number;
   }): Promise<void> => {
     await chiSound.play();
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[0]
-        .filter((n) => !body.pais.includes(n))
+      tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
+        .filter((n) => !body.pais.includes(n) && !body.dummies.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
+      tmpGameInfo.kawas[body.fromWho].pop();
       tmpGameInfo.huros[body.who].push({
         type: 'chi',
-        fromWho: (body.who - 1) % 4,
         pai: body.pai,
-        pais: [body.pai].concat(body.pais.filter((pai) => pai != body.pai)),
+        pais: body.pais,
+        who: body.who,
+        fromWho: body.fromWho,
       });
       return tmpGameInfo;
     });
   };
 
-  const allOpenKanDora = async (body: {
+  const openDora = async (body: {
     pai: number;
     dummy: number;
     rest: number;
@@ -403,19 +350,7 @@ const Page = () => {
     });
   };
 
-  const myDahai = async (body: { pai: number }): Promise<void> => {
-    await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[0] = tmpGameInfo.tehais[0].filter(
-        (n) => n !== body.pai
-      );
-      tmpGameInfo.tehais[0].sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.kawas[0].push(body.pai);
-      return tmpGameInfo;
-    });
-  };
-
-  const otherDahai = async (body: {
+  const dahai = async (body: {
     pai: number;
     dummy: number;
     who: number;
@@ -423,7 +358,7 @@ const Page = () => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
-        (n) => n !== body.dummy
+        (n) => n !== body.pai && n !== body.dummy
       );
       tmpGameInfo.tehais[body.who].sort((a, b) => (a > b ? 1 : -1));
       tmpGameInfo.kawas[body.who].push(body.pai);
@@ -435,7 +370,7 @@ const Page = () => {
     <Context.Provider
       value={{
         gameInfo,
-        richiNotice,
+        richiNotices,
         ankanNotices,
         minkanNotices,
         ponNotices,

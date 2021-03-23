@@ -1,10 +1,12 @@
 import { createContext } from 'react';
 
-type HuroType = {
+export type HuroType = {
   type: string;
+  who: number;
   fromWho: number;
   pai: number;
   pais: number[];
+  dummies?: number[];
 };
 
 export type GameInfoType = {
@@ -39,11 +41,13 @@ export type NoticeType = {
   pai: number;
   pais: number[];
   dummies: number[];
+  who: number;
+  fromWho: number;
 }[];
 
 type ContextType = {
   gameInfo: GameInfoType;
-  richiNotice: boolean;
+  richiNotices: NoticeType;
   ankanNotices: NoticeType;
   minkanNotices: NoticeType;
   ponNotices: NoticeType;

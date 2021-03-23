@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 
 import { Constants } from './Constants';
-import { Context } from './Context';
+import { Context, HuroType } from './Context';
 import { Pai } from './Pai';
 
 const {
@@ -16,6 +16,12 @@ const {
 interface TehaiProps {
   who: number;
 }
+
+const sortPais = (huro: HuroType): number[] => {
+  const pais = huro.pais.filter((pai) => pai != huro.pai);
+  pais.splice(3 - ((huro.fromWho - huro.who + 4) % 4), 0, huro.pai);
+  return pais;
+};
 
 export const Huro = (props: TehaiProps) => {
   const { gameInfo } = useContext(Context);
@@ -32,33 +38,33 @@ export const Huro = (props: TehaiProps) => {
               ))}
             {huro.type == 'pon' && (
               <>
-                <Pai
-                  key={huro.pai}
-                  no={huro.pai}
-                  height={HuroPaiHeight}
-                  isRotation={true}
-                />
-                {huro.pais.map(
-                  (pai) =>
-                    pai != huro.pai && (
-                      <Pai key={pai} no={pai} height={HuroPaiHeight} />
-                    )
+                {sortPais(huro).map((pai) =>
+                  pai == huro.pai ? (
+                    <Pai
+                      key={huro.pai}
+                      no={huro.pai}
+                      height={HuroPaiHeight}
+                      isRotation={true}
+                    />
+                  ) : (
+                    <Pai key={pai} no={pai} height={HuroPaiHeight} />
+                  )
                 )}
               </>
             )}
             {huro.type == 'chi' && (
               <>
-                <Pai
-                  key={huro.pai}
-                  no={huro.pai}
-                  height={HuroPaiHeight}
-                  isRotation={true}
-                />
-                {huro.pais.map(
-                  (pai) =>
-                    pai != huro.pai && (
-                      <Pai key={pai} no={pai} height={HuroPaiHeight} />
-                    )
+                {sortPais(huro).map((pai) =>
+                  pai == huro.pai ? (
+                    <Pai
+                      key={huro.pai}
+                      no={huro.pai}
+                      height={HuroPaiHeight}
+                      isRotation={true}
+                    />
+                  ) : (
+                    <Pai key={pai} no={pai} height={HuroPaiHeight} />
+                  )
                 )}
               </>
             )}
