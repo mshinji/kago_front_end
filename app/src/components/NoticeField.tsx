@@ -106,20 +106,26 @@ const NestedPonNotice = () => {
   return (
     <>
       {isPonNoticeNested ? (
-        ponNotices.map((ponNotice, key) => (
-          <HuroWrapper key={key} onClick={() => onClickNestedPonNotice(key)}>
-            <Pai
-              key={ponNotice.pai}
-              no={ponNotice.pai}
-              height={48}
-              isRotation={true}
-            />
-            {ponNotice.pais.map(
-              (pai) =>
-                pai != ponNotice.pai && <Pai key={pai} no={pai} height={48} />
-            )}
-          </HuroWrapper>
-        ))
+        ponNotices.map((ponNotice, key) => {
+          const pais = ponNotice.pais.filter((pai) => pai != ponNotice.pai);
+          pais.splice(3 - ponNotice.fromWho, 0, ponNotice.pai);
+          return (
+            <HuroWrapper key={key} onClick={() => onClickNestedPonNotice(key)}>
+              {pais.map((pai) =>
+                pai == ponNotice.pai ? (
+                  <Pai
+                    key={ponNotice.pai}
+                    no={ponNotice.pai}
+                    height={48}
+                    isRotation={true}
+                  />
+                ) : (
+                  <Pai key={pai} no={pai} height={48} />
+                )
+              )}
+            </HuroWrapper>
+          );
+        })
       ) : (
         <></>
       )}
@@ -147,20 +153,26 @@ const NestedChiNotice = () => {
   return (
     <>
       {isChiNoticeNested ? (
-        chiNotices.map((chiNotice, key) => (
-          <HuroWrapper key={key} onClick={() => onClickNestedChiNotice(key)}>
-            <Pai
-              key={chiNotice.pai}
-              no={chiNotice.pai}
-              height={48}
-              isRotation={true}
-            />
-            {chiNotice.pais.map(
-              (pai) =>
-                pai != chiNotice.pai && <Pai key={pai} no={pai} height={48} />
-            )}
-          </HuroWrapper>
-        ))
+        chiNotices.map((chiNotice, key) => {
+          const pais = chiNotice.pais.filter((pai) => pai != chiNotice.pai);
+          pais.splice(3 - chiNotice.fromWho, 0, chiNotice.pai);
+          return (
+            <HuroWrapper key={key} onClick={() => onClickNestedChiNotice(key)}>
+              {pais.map((pai) =>
+                pai == chiNotice.pai ? (
+                  <Pai
+                    key={chiNotice.pai}
+                    no={chiNotice.pai}
+                    height={48}
+                    isRotation={true}
+                  />
+                ) : (
+                  <Pai key={pai} no={pai} height={48} />
+                )
+              )}
+            </HuroWrapper>
+          );
+        })
       ) : (
         <></>
       )}
@@ -171,7 +183,7 @@ const NestedChiNotice = () => {
 // キャンセル
 const CancelNotice = () => {
   const {
-    richiNotice,
+    richiNotices,
     ankanNotices,
     minkanNotices,
     ponNotices,
@@ -181,11 +193,11 @@ const CancelNotice = () => {
   return (
     <Notice
       visible={
-        richiNotice ||
-        Object.keys(ankanNotices).length >= 1 ||
-        Object.keys(minkanNotices).length >= 1 ||
-        Object.keys(ponNotices).length >= 1 ||
-        Object.keys(chiNotices).length >= 1
+        richiNotices.length >= 1 ||
+        ankanNotices.length >= 1 ||
+        minkanNotices.length >= 1 ||
+        ponNotices.length >= 1 ||
+        chiNotices.length >= 1
       }
       onClick={() => onClickCancelNotice()}
     >
