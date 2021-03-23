@@ -18,11 +18,11 @@ const kanSound = new Howl({ src: ['/static/sounds/kan.m4a'] });
 const ponSound = new Howl({ src: ['/static/sounds/pon.m4a'] });
 const chiSound = new Howl({ src: ['/static/sounds/chi.m4a'] });
 
-const Page = () => {
-  // 変数
-  let token = '';
+// 変数
+let token = '';
+let myPrevAction = '';
 
-  // ステート
+const Page = () => {
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
   const [richiNotice, setRichiNotice] = useState<boolean>(false);
@@ -49,13 +49,15 @@ const Page = () => {
   // 便利関数群
   const send = async (data: any): Promise<void> => {
     data.token = token;
+    myPrevAction = data.type;
 
-    if (ws.readyState == 1) {
+    if (ws.readyState === 1) {
       await ws.send(JSON.stringify(data));
     } else {
       ws.onopen = async () => await ws.send(JSON.stringify(data));
     }
     console.log('send:', data);
+    console.log('---------');
   };
 
   const wait = async (ms: number) =>
@@ -72,8 +74,8 @@ const Page = () => {
 
   const onMessage = async (event: IMessageEvent): Promise<void> => {
     const datas: DataType[] = JSON.parse(event.data as string);
+    if (datas.length === 0) return;
     console.log('receive:', datas);
-    if (datas === []) return;
 
     for (const data of datas) {
       // 通知リセット
@@ -82,39 +84,45 @@ const Page = () => {
       // 受信対応
       if (data.type === 'start_game') {
         await startGame(data.body);
-      } else if (data.type == 'start_kyoku') {
+      } else if (data.type === 'start_kyoku') {
         await startKyoku(data.body);
-      } else if (data.type == 'my_tsumo') {
-        await wait(300);
+      } else if (data.type === 'my_tsumo') {
+        if (myPrevAction !== 'cancel') {
+          await wait(300);
+          console.log('myPrecAction', myPrevAction);
+        }
         await myTsumo(data.body);
-      } else if (data.type == 'other_tsumo') {
-        await wait(300);
+      } else if (data.type === 'other_tsumo') {
+        if (myPrevAction !== 'cancel') {
+          await wait(300);
+          console.log('myPrecAction', myPrevAction);
+        }
         await otherTsumo(data.body);
-      } else if (data.type == 'my_ankan_notice') {
+      } else if (data.type === 'my_ankan_notice') {
         await myAnkanNotice(data.body);
-      } else if (data.type == 'my_pon_notice') {
+      } else if (data.type === 'my_pon_notice') {
         await myPonNotice(data.body);
-      } else if (data.type == 'my_chi_notice') {
+      } else if (data.type === 'my_chi_notice') {
         await myChiNotice(data.body);
-      } else if (data.type == 'my_ankan') {
+      } else if (data.type === 'my_ankan') {
         await myAnkan(data.body);
-      } else if (data.type == 'other_ankan') {
+      } else if (data.type === 'other_ankan') {
         await otherAnkan(data.body);
-      } else if (data.type == 'my_pon') {
+      } else if (data.type === 'my_pon') {
         await myPon(data.body);
-      } else if (data.type == 'other_pon') {
+      } else if (data.type === 'other_pon') {
         await wait(300);
         await otherPon(data.body);
-      } else if (data.type == 'my_chi') {
+      } else if (data.type === 'my_chi') {
         await myChi(data.body);
-      } else if (data.type == 'other_chi') {
+      } else if (data.type === 'other_chi') {
         await wait(300);
         await otherChi(data.body);
-      } else if (data.type == 'all_open_kan_dora') {
+      } else if (data.type === 'all_open_kan_dora') {
         await allOpenKanDora(data.body);
-      } else if (data.type == 'my_dahai') {
+      } else if (data.type === 'my_dahai') {
         await myDahai(data.body);
-      } else if (data.type == 'other_dahai') {
+      } else if (data.type === 'other_dahai') {
         await wait(300);
         await otherDahai(data.body);
       }
@@ -126,9 +134,9 @@ const Page = () => {
   const onClose = async (): Promise<void> => console.log('WebSocketClosed...');
 
   const onClickAnkanNotice = async (): Promise<void> => {
-    if (ankanNotices.length == 0) {
+    if (ankanNotices.length === 0) {
       return;
-    } else if (ankanNotices.length == 1) {
+    } else if (ankanNotices.length === 1) {
       await send({
         type: 'ankan',
         body: { pais: ankanNotices[0].pais },
@@ -147,9 +155,9 @@ const Page = () => {
   };
 
   const onClickPonNotice = async (): Promise<void> => {
-    if (ponNotices.length == 0) {
+    if (ponNotices.length === 0) {
       return;
-    } else if (ponNotices.length == 1) {
+    } else if (ponNotices.length === 1) {
       await send({
         type: 'pon',
         body: { pai: ponNotices[0].pai, pais: ponNotices[0].pais },
@@ -168,9 +176,9 @@ const Page = () => {
   };
 
   const onClickChiNotice = async (): Promise<void> => {
-    if (chiNotices.length == 0) {
+    if (chiNotices.length === 0) {
       return;
-    } else if (chiNotices.length == 1) {
+    } else if (chiNotices.length === 1) {
       await send({
         type: 'chi',
         body: { pai: chiNotices[0].pai, pais: chiNotices[0].pais },
@@ -394,7 +402,7 @@ const Page = () => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.dora = tmpGameInfo.dora.map((n) =>
-        n == body.dummy ? body.pai : n
+        n === body.dummy ? body.pai : n
       );
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
