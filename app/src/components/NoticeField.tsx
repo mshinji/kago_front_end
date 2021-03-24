@@ -16,6 +16,8 @@ const {
 } = Constants;
 
 export const NoticeField = () => {
+  const { isRichiDeclaration } = useContext(Context);
+
   return (
     <Wrapper>
       <NestedNoticeWrapper>
@@ -24,12 +26,30 @@ export const NoticeField = () => {
         <NestedChiNotice />
       </NestedNoticeWrapper>
       <NoticeWrapper>
-        <AnkanNotice />
-        <PonNotice />
-        <ChiNotice />
-        <CancelNotice />
+        {!isRichiDeclaration && (
+          <>
+            <RichiNotice />
+            <AnkanNotice />
+            <PonNotice />
+            <ChiNotice />
+            <CancelNotice />
+          </>
+        )}
       </NoticeWrapper>
     </Wrapper>
+  );
+};
+
+// リーチ
+const RichiNotice = () => {
+  const { richiNotices, onClickRichiNotice } = useContext(Context);
+  return (
+    <Notice
+      visible={richiNotices.length >= 1}
+      onClick={() => onClickRichiNotice()}
+    >
+      リーチ
+    </Notice>
   );
 };
 
@@ -38,7 +58,7 @@ const AnkanNotice = () => {
   const { ankanNotices, onClickAnkanNotice } = useContext(Context);
   return (
     <Notice
-      visible={Object.keys(ankanNotices).length >= 1}
+      visible={ankanNotices.length >= 1}
       onClick={() => onClickAnkanNotice()}
     >
       カン
@@ -90,10 +110,7 @@ const NestedAnkanNotice = () => {
 const PonNotice = () => {
   const { ponNotices, onClickPonNotice } = useContext(Context);
   return (
-    <Notice
-      visible={Object.keys(ponNotices).length >= 1}
-      onClick={() => onClickPonNotice()}
-    >
+    <Notice visible={ponNotices.length >= 1} onClick={() => onClickPonNotice()}>
       ポン
     </Notice>
   );
@@ -117,7 +134,7 @@ const NestedPonNotice = () => {
                     key={ponNotice.pai}
                     no={ponNotice.pai}
                     height={48}
-                    isRotation={true}
+                    rotationType={'down'}
                   />
                 ) : (
                   <Pai key={pai} no={pai} height={48} />
@@ -137,10 +154,7 @@ const NestedPonNotice = () => {
 const ChiNotice = () => {
   const { chiNotices, onClickChiNotice } = useContext(Context);
   return (
-    <Notice
-      visible={Object.keys(chiNotices).length >= 1}
-      onClick={() => onClickChiNotice()}
-    >
+    <Notice visible={chiNotices.length >= 1} onClick={() => onClickChiNotice()}>
       チー
     </Notice>
   );
@@ -164,7 +178,7 @@ const NestedChiNotice = () => {
                     key={chiNotice.pai}
                     no={chiNotice.pai}
                     height={48}
-                    isRotation={true}
+                    rotationType={'down'}
                   />
                 ) : (
                   <Pai key={pai} no={pai} height={48} />
@@ -240,9 +254,11 @@ const Notice = styled.div.attrs((props: { visible: boolean }) => ({
   visible: props.visible,
 }))`
   display: ${(props) => (props.visible ? 'block' : 'none')};
-  width: ${NoticeWidth}px;
+  /* width: ${NoticeWidth}px; */
   height: ${NoticeHeight}px;
   margin-left: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   background: grey;
   opacity: 0.7;
   transform-origin: center center 0;

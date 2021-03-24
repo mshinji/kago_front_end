@@ -12,6 +12,7 @@ export type HuroType = {
 export type GameInfoType = {
   tehais: number[][];
   kawas: number[][];
+  richiDeclarationPais: number[];
   huros: HuroType[][];
   kyoku: number;
   honba: number;
@@ -26,6 +27,7 @@ export type GameInfoType = {
 export const defaultGameInfo: GameInfoType = {
   tehais: [[], [], [], []],
   kawas: [[], [], [], []],
+  richiDeclarationPais: [],
   huros: [[], [], [], []],
   kyoku: 0,
   honba: 0,
@@ -52,10 +54,12 @@ type ContextType = {
   minkanNotices: NoticeType;
   ponNotices: NoticeType;
   chiNotices: NoticeType;
+  isRichiDeclaration: boolean;
   isAnkanNoticeNested: boolean;
   isChiNoticeNested: boolean;
   isPonNoticeNested: boolean;
   onReady: (mode: number) => Promise<void>;
+  onClickRichiNotice: () => Promise<void>;
   onClickAnkanNotice: () => Promise<void>;
   onClickNestedAnkanNotice: (i: number) => Promise<void>;
   onClickPonNotice: () => Promise<void>;
