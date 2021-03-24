@@ -39,16 +39,34 @@ export const defaultGameInfo: GameInfoType = {
   kazes: ['', '', '', ''],
 };
 
+export type AgariInfoType = {
+  yakus: { name: string; han: number }[];
+  doras: number[];
+  uradoras: number[];
+  scores: number[];
+  scoreMovements: number[];
+};
+
+export const defaultAgariInfo: AgariInfoType = {
+  yakus: [],
+  doras: [],
+  uradoras: [],
+  scores: [],
+  scoreMovements: [],
+};
+
 export type NoticeType = {
   pai: number;
   pais: number[];
   dummies: number[];
-  who: number;
   fromWho: number;
 }[];
 
 type ContextType = {
   gameInfo: GameInfoType;
+  agariInfo: AgariInfoType;
+  tsumohoNotices: boolean;
+  ronhoNotices: boolean;
   richiNotices: NoticeType;
   ankanNotices: NoticeType;
   minkanNotices: NoticeType;
@@ -59,6 +77,8 @@ type ContextType = {
   isChiNoticeNested: boolean;
   isPonNoticeNested: boolean;
   onReady: (mode: number) => Promise<void>;
+  onClickTsumohoNotice: () => Promise<void>;
+  onClickRonhoNotice: () => Promise<void>;
   onClickRichiNotice: () => Promise<void>;
   onClickAnkanNotice: () => Promise<void>;
   onClickNestedAnkanNotice: (i: number) => Promise<void>;

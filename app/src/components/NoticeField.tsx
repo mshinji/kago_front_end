@@ -26,17 +26,42 @@ export const NoticeField = () => {
         <NestedChiNotice />
       </NestedNoticeWrapper>
       <NoticeWrapper>
-        {!isRichiDeclaration && (
-          <>
-            <RichiNotice />
-            <AnkanNotice />
-            <PonNotice />
-            <ChiNotice />
-            <CancelNotice />
-          </>
-        )}
+        <TsumohoNotice />
+        <RonhoNotice />
+        {
+          // TODO 暗槓はリーチ後も表示
+          !isRichiDeclaration && (
+            <>
+              <RichiNotice />
+              <AnkanNotice />
+              <PonNotice />
+              <ChiNotice />
+              <CancelNotice />
+            </>
+          )
+        }
       </NoticeWrapper>
     </Wrapper>
+  );
+};
+
+// ツモ和
+const TsumohoNotice = () => {
+  const { tsumohoNotices, onClickTsumohoNotice } = useContext(Context);
+  return (
+    <Notice visible={tsumohoNotices} onClick={() => onClickTsumohoNotice()}>
+      ツモ
+    </Notice>
+  );
+};
+
+// ロン和
+const RonhoNotice = () => {
+  const { ronhoNotices, onClickRonhoNotice } = useContext(Context);
+  return (
+    <Notice visible={ronhoNotices} onClick={() => onClickRonhoNotice()}>
+      ロン
+    </Notice>
   );
 };
 
@@ -197,6 +222,8 @@ const NestedChiNotice = () => {
 // キャンセル
 const CancelNotice = () => {
   const {
+    tsumohoNotices,
+    ronhoNotices,
     richiNotices,
     ankanNotices,
     minkanNotices,
@@ -207,6 +234,8 @@ const CancelNotice = () => {
   return (
     <Notice
       visible={
+        tsumohoNotices ||
+        ronhoNotices ||
         richiNotices.length >= 1 ||
         ankanNotices.length >= 1 ||
         minkanNotices.length >= 1 ||
