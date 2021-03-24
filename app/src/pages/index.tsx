@@ -2,7 +2,6 @@ import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
 import { Context, defaultGameInfo, GameInfoType, NoticeType } from 'src/components/Context';
 import { Template } from 'src/components/Template';
-import { isParenthesizedExpression } from 'typescript';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
 
 type DataType = {
@@ -14,7 +13,7 @@ const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`);
 // const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
 // const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
-// const richiSound = new Howl({ src: ['/static/sounds/richi.m4a'] });
+const richiSound = new Howl({ src: ['/static/sounds/richi.m4a'] });
 const kanSound = new Howl({ src: ['/static/sounds/kan.m4a'] });
 const ponSound = new Howl({ src: ['/static/sounds/pon.m4a'] });
 const chiSound = new Howl({ src: ['/static/sounds/chi.m4a'] });
@@ -31,6 +30,7 @@ const Page = () => {
   const [minkanNotices, setMinkanNotices] = useState<NoticeType>([]);
   const [ponNotices, setPonNotices] = useState<NoticeType>([]);
   const [chiNotices, setChiNotices] = useState<NoticeType>([]);
+  const [isRichiDeclaration, setIsRichiDeclaration] = useState<boolean>(false);
   const [isAnkanNoticeNested, setIsAnkanNoticeNested] = useState<boolean>(
     false
   );
@@ -131,6 +131,10 @@ const Page = () => {
 
   const onClose = async (): Promise<void> => console.log('WebSocketClosed...');
 
+  const onClickRichiNotice = async (): Promise<void> => {
+    await setIsRichiDeclaration(true);
+  };
+
   const onClickAnkanNotice = async (): Promise<void> => {
     if (ankanNotices.length === 0) {
       return;
@@ -195,6 +199,7 @@ const Page = () => {
   };
 
   const onClickCancelNotice = async (): Promise<void> => {
+    await resetNotices();
     await send({
       type: 'cancel',
       body: {},
@@ -206,6 +211,7 @@ const Page = () => {
       type: 'dahai',
       body: {
         pai: dahai,
+        richi: isRichiDeclaration,
       },
     });
   };
@@ -354,7 +360,12 @@ const Page = () => {
     pai: number;
     dummy: number;
     who: number;
+    richi: boolean;
   }): Promise<void> => {
+    if (body.richi) {
+      await setIsRichiDeclaration(false);
+      await richiSound.play();
+    }
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
@@ -362,6 +373,9 @@ const Page = () => {
       );
       tmpGameInfo.tehais[body.who].sort((a, b) => (a > b ? 1 : -1));
       tmpGameInfo.kawas[body.who].push(body.pai);
+      if (body.richi) {
+        tmpGameInfo.richiDeclarationPais.push(body.pai);
+      }
       return tmpGameInfo;
     });
   };
@@ -375,10 +389,12 @@ const Page = () => {
         minkanNotices,
         ponNotices,
         chiNotices,
+        isRichiDeclaration,
         isAnkanNoticeNested,
         isPonNoticeNested,
         isChiNoticeNested,
         onReady,
+        onClickRichiNotice,
         onClickAnkanNotice,
         onClickNestedAnkanNotice,
         onClickPonNotice,

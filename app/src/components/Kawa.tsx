@@ -23,26 +23,24 @@ export const Kawa = (props: KawaProps) => {
   const { gameInfo } = useContext(Context);
   return (
     <Wrapper who={props.who}>
-      <Row>
-        {gameInfo.kawas[props.who].slice(0, 6).map((pai) => (
-          <Pai key={pai} no={pai} height={KawaPaiHeight} />
-        ))}
-      </Row>
-      <Row>
-        {gameInfo.kawas[props.who].slice(6, 12).map((pai) => (
-          <Pai key={pai} no={pai} height={KawaPaiHeight} />
-        ))}
-      </Row>
-      <Row>
-        {gameInfo.kawas[props.who].slice(12, 18).map((pai) => (
-          <Pai key={pai} no={pai} height={KawaPaiHeight} />
-        ))}
-      </Row>
-      <Row>
-        {gameInfo.kawas[props.who].slice(18, 24).map((pai) => (
-          <Pai key={pai} no={pai} height={KawaPaiHeight} />
-        ))}
-      </Row>
+      {[0, 1, 2, 3].map((i) => (
+        <Row>
+          {gameInfo.kawas[props.who]
+            .slice(6 * i, 6 * (i + 1))
+            .map((pai) =>
+              gameInfo.richiDeclarationPais.includes(pai) ? (
+                <Pai
+                  key={pai}
+                  no={pai}
+                  height={KawaPaiHeight}
+                  rotationType={'up'}
+                />
+              ) : (
+                <Pai key={pai} no={pai} height={KawaPaiHeight} />
+              )
+            )}
+        </Row>
+      ))}
     </Wrapper>
   );
 };

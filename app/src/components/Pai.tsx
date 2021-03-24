@@ -6,7 +6,8 @@ import { Constants } from './Constants';
 interface PaiProps {
   no: number;
   height: number;
-  isRotation?: boolean;
+  isDisabled?: boolean;
+  rotationType?: 'up' | 'down';
   onClick?: () => void;
 }
 
@@ -28,15 +29,23 @@ export const Pai = (props: PaiProps) => {
     no = Math.floor(props.no / 4);
   }
 
+  let transformStyle = '';
+  if (props.rotationType == 'up') {
+    transformStyle = `rotate(270deg)
+    translate(${(height - width) / 2}px, ${(height - width) / 2}px)`;
+  }
+  if (props.rotationType == 'down') {
+    transformStyle = `rotate(270deg)
+    translate(${-(height - width) / 2}px, ${(height - width) / 2}px)`;
+  }
+
   const customStyle = {
-    transform: props.isRotation
-      ? `rotate(270deg)
-      translate(${-(height - width) / 2}px, ${(height - width) / 2}px)`
-      : '',
+    opacity: props.isDisabled ? 0.7 : 1.0,
+    transform: transformStyle,
   };
 
   return (
-    <Wrapper {...props} width={props.isRotation ? height : width}>
+    <Wrapper {...props} width={props.rotationType ? height : width}>
       <img
         src={`/static/images/pai${no}.png`}
         width={width}

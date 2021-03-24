@@ -44,7 +44,7 @@ export const Huro = (props: TehaiProps) => {
                       key={huro.pai}
                       no={huro.pai}
                       height={HuroPaiHeight}
-                      isRotation={true}
+                      rotationType={'down'}
                     />
                   ) : (
                     <Pai key={pai} no={pai} height={HuroPaiHeight} />
@@ -60,7 +60,7 @@ export const Huro = (props: TehaiProps) => {
                       key={huro.pai}
                       no={huro.pai}
                       height={HuroPaiHeight}
-                      isRotation={true}
+                      rotationType={'down'}
                     />
                   ) : (
                     <Pai key={pai} no={pai} height={HuroPaiHeight} />
