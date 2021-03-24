@@ -1,6 +1,13 @@
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
-import { Context, defaultGameInfo, GameInfoType, NoticeType } from 'src/components/Context';
+import {
+  AgariInfoType,
+  Context,
+  defaultAgariInfo,
+  defaultGameInfo,
+  GameInfoType,
+  NoticeType,
+} from 'src/components/Context';
 import { Template } from 'src/components/Template';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
 
@@ -11,7 +18,7 @@ type DataType = {
 
 const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`);
-// const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
+const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
 // const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
 const richiSound = new Howl({ src: ['/static/sounds/richi.m4a'] });
 const kanSound = new Howl({ src: ['/static/sounds/kan.m4a'] });
@@ -24,7 +31,10 @@ let myPrevAction = '';
 
 const Page = () => {
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
+  const [agariInfo, setAgariInfo] = useState<AgariInfoType>(defaultAgariInfo);
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
+  const [tsumohoNotices, setTsumohoNotices] = useState<boolean>(false);
+  const [ronhoNotices, setRonhoNotices] = useState<boolean>(false);
   const [richiNotices, setRichiNotices] = useState<NoticeType>([]);
   const [ankanNotices, setAnkanNotices] = useState<NoticeType>([]);
   const [minkanNotices, setMinkanNotices] = useState<NoticeType>([]);
@@ -41,9 +51,6 @@ const Page = () => {
     // WebSocket
     ws.onmessage = async (event: IMessageEvent) => await onMessage(event);
     ws.onclose = async () => await onClose();
-
-    // ビルド用
-    setMinkanNotices([]);
   }, []);
 
   // 便利関数群
@@ -88,15 +95,13 @@ const Page = () => {
       if (data.type === 'start_kyoku_message') {
         await startKyoku(data.body);
       }
+      if (data.type === 'tsumoho_message') {
+        console.log('TSUMOHO!!!', data.body);
+        await tsumoho(data.body);
+      }
       if (data.type === 'tsumo_message') {
         if (myPrevAction !== 'cancel') await wait(300);
         await tsumo(data.body);
-      }
-      if (data.type === 'richi_notice_message') {
-        await richiNotice(data.body);
-      }
-      if (data.type === 'ankan_notice_message') {
-        await ankanNotice(data.body);
       }
       if (data.type === 'pon_notice_message') {
         await ponNotice(data.body);
@@ -124,12 +129,32 @@ const Page = () => {
         if (data.body.who != 0) await wait(300);
         await dahai(data.body);
       }
+      // 通知
+      if (data.type == 'tsumoho_notice_message') {
+        await tsumohoNotice();
+      }
+      if (data.type == 'ronho_notice_message') {
+        await ronhoNotice();
+      }
+      if (data.type === 'richi_notice_message') {
+        await richiNotice(data.body);
+      }
+      if (data.type === 'ankan_notice_message') {
+        await ankanNotice(data.body);
+      }
     }
 
     await send({ type: 'next' });
   };
 
   const onClose = async (): Promise<void> => console.log('WebSocketClosed...');
+
+  const onClickTsumohoNotice = async (): Promise<void> => {
+    await send({ type: 'tsumoho' });
+  };
+  const onClickRonhoNotice = async (): Promise<void> => {
+    await send({ type: 'ronho' });
+  };
 
   const onClickRichiNotice = async (): Promise<void> => {
     await setIsRichiDeclaration(true);
@@ -218,8 +243,12 @@ const Page = () => {
 
   // 局進行関数群
   const resetNotices = async (): Promise<void> => {
+    await setGameInfo;
+    await setTsumohoNotices(false);
+    await setRonhoNotices(false);
     await setRichiNotices([]);
     await setAnkanNotices([]);
+    await setMinkanNotices([]);
     await setPonNotices([]);
     await setChiNotices([]);
     await resetIsNoticeNested();
@@ -239,18 +268,11 @@ const Page = () => {
     await setGameInfo(body);
   };
 
-  const tsumo = async (body: {
-    pai: number;
-    dummy: number;
-    who: number;
-    rest: number;
-  }): Promise<void> => {
-    await setGameInfo((preGameInfo) => {
-      let tmpGameInfo = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[body.who].push(body?.pai || body?.dummy);
-      tmpGameInfo.rest = body.rest;
-      return tmpGameInfo;
-    });
+  const tsumohoNotice = async (): Promise<void> => {
+    await setTsumohoNotices(true);
+  };
+  const ronhoNotice = async (): Promise<void> => {
+    await setRonhoNotices(true);
   };
 
   const richiNotice = async (body: NoticeType): Promise<void> => {
@@ -267,6 +289,49 @@ const Page = () => {
 
   const chiNotice = async (body: NoticeType): Promise<void> => {
     await setChiNotices(body);
+  };
+
+  const tsumoho = async (body: AgariInfoType): Promise<void> => {
+    await tsumohoSound.play();
+    await setAgariInfo(body);
+  };
+
+  const tsumo = async (body: {
+    pai: number;
+    dummy: number;
+    who: number;
+    rest: number;
+  }): Promise<void> => {
+    await setGameInfo((preGameInfo) => {
+      let tmpGameInfo = JSON.parse(JSON.stringify(preGameInfo));
+      tmpGameInfo.tehais[body.who].push(body?.pai || body?.dummy);
+      tmpGameInfo.rest = body.rest;
+      return tmpGameInfo;
+    });
+  };
+
+  const dahai = async (body: {
+    pai: number;
+    dummy: number;
+    who: number;
+    richi: boolean;
+  }): Promise<void> => {
+    if (body.richi) {
+      await setIsRichiDeclaration(false);
+      await richiSound.play();
+    }
+    await setGameInfo((preGameInfo) => {
+      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
+        (n) => n !== body.pai && n !== body.dummy
+      );
+      tmpGameInfo.tehais[body.who].sort((a, b) => (a > b ? 1 : -1));
+      tmpGameInfo.kawas[body.who].push(body.pai);
+      if (body.richi) {
+        tmpGameInfo.richiDeclarationPais.push(body.pai);
+      }
+      return tmpGameInfo;
+    });
   };
 
   const ankan = async (body: {
@@ -356,34 +421,13 @@ const Page = () => {
     });
   };
 
-  const dahai = async (body: {
-    pai: number;
-    dummy: number;
-    who: number;
-    richi: boolean;
-  }): Promise<void> => {
-    if (body.richi) {
-      await setIsRichiDeclaration(false);
-      await richiSound.play();
-    }
-    await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
-        (n) => n !== body.pai && n !== body.dummy
-      );
-      tmpGameInfo.tehais[body.who].sort((a, b) => (a > b ? 1 : -1));
-      tmpGameInfo.kawas[body.who].push(body.pai);
-      if (body.richi) {
-        tmpGameInfo.richiDeclarationPais.push(body.pai);
-      }
-      return tmpGameInfo;
-    });
-  };
-
   return (
     <Context.Provider
       value={{
         gameInfo,
+        agariInfo,
+        tsumohoNotices,
+        ronhoNotices,
         richiNotices,
         ankanNotices,
         minkanNotices,
@@ -394,6 +438,8 @@ const Page = () => {
         isPonNoticeNested,
         isChiNoticeNested,
         onReady,
+        onClickTsumohoNotice,
+        onClickRonhoNotice,
         onClickRichiNotice,
         onClickAnkanNotice,
         onClickNestedAnkanNotice,
