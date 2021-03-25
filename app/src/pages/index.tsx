@@ -103,7 +103,7 @@ const Page = () => {
         await dahai(data.body);
       }
       if (data.type === 'richi_complete_message') {
-        await richi_complete(data.body);
+        await richiComplete(data.body);
       }
       if (data.type === 'ankan_message') {
         await ankan(data.body);
@@ -156,6 +156,11 @@ const Page = () => {
 
   const onClickRichiNotice = async (): Promise<void> => {
     await setIsRichiDeclaration(true);
+    const tmpRichiNotices: NoticeType = JSON.parse(
+      JSON.stringify(richiNotices)
+    );
+    await resetNotices();
+    await setRichiNotices(tmpRichiNotices);
   };
 
   const onClickAnkanNotice = async (): Promise<void> => {
@@ -332,7 +337,7 @@ const Page = () => {
     });
   };
 
-  const richi_complete = async (body: {
+  const richiComplete = async (body: {
     scores: number[];
     richis: boolean[];
   }): Promise<void> => {

@@ -21,22 +21,40 @@ export const KyokuResultField = () => {
       <Row>
         <Dora>
           {agariInfo.doras.map((dora) => (
-            <Pai no={dora} height={ResultPaiHeight} />
+            <Pai no={dora} key={dora} height={ResultPaiHeight} />
           ))}
         </Dora>
         <Dora>
           {agariInfo.uradoras.map((dora) => (
-            <Pai no={dora} height={ResultPaiHeight} />
+            <Pai no={dora} key={dora} height={ResultPaiHeight} />
           ))}
         </Dora>
       </Row>
-      <Yaku>
-        {agariInfo.yakus.map((yaku) => (
-          <div>
-            {yaku.name}:{yaku.han}飜
-          </div>
-        ))}
-      </Yaku>
+      <YakuField>
+        <Col>
+          {agariInfo.yakus
+            .slice(0, Math.ceil(agariInfo.yakus.length / 2))
+            .map((yaku) => (
+              <Yaku key={yaku.name}>
+                <YakuName>{yaku.name}</YakuName>
+                <YakuHan>{yaku.han}飜</YakuHan>
+              </Yaku>
+            ))}
+        </Col>
+        <Col>
+          {agariInfo.yakus
+            .slice(
+              Math.ceil(agariInfo.yakus.length / 2),
+              agariInfo.yakus.length
+            )
+            .map((yaku) => (
+              <Yaku key={yaku.name}>
+                <YakuName>{yaku.name}</YakuName>
+                <YakuHan>{yaku.han}飜</YakuHan>
+              </Yaku>
+            ))}
+        </Col>
+      </YakuField>
       <ScoreField>
         <Score>
           <ScoreMovement>
@@ -97,15 +115,37 @@ const Row = styled.div`
   width: ${KyokuResultFieldWidth}px;
 `;
 
+const Col = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: ${KyokuResultFieldWidth / 2}px;
+`;
+
 const Dora = styled.div`
   display: flex;
   margin: 10px 0;
 `;
 
+const YakuField = styled.div`
+  display: flex;
+  width: ${KyokuResultFieldWidth}px;
+`;
+
 const Yaku = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding-left: 10px;
   color: white;
   font-size: 24px;
   font-weight: bold;
+`;
+
+const YakuName = styled.div`
+  width: ${(KyokuResultFieldWidth * 2.5) / 8}px;
+`;
+
+const YakuHan = styled.div`
+  width: ${(KyokuResultFieldWidth * 1) / 8}px;
 `;
 
 const ScoreField = styled.div`
@@ -119,6 +159,9 @@ const Score = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 5px 10px;
+  background: green;
+  border-radius: 10px;
 `;
 
 const CurrentScore = styled.div`
