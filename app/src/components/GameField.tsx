@@ -5,8 +5,8 @@ import { Constants } from './Constants';
 import { Huro } from './Huro';
 import { Hyoji } from './Hyoji';
 import { Kawa } from './Kawa';
+import { KyokuResultField } from './KyokuResultField';
 import { NoticeField } from './NoticeField';
-import { ResultField } from './ResultField';
 import { Tehai } from './Tehai';
 
 const { GameFieldHeight, GameFieldWidth } = Constants;
@@ -28,7 +28,7 @@ export const GameField = () => {
       <Huro who={3} />
       <Hyoji />
       <NoticeField />
-      <ResultField />
+      <KyokuResultField />
     </Wrapper>
   );
 };

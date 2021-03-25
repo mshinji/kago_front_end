@@ -8,12 +8,12 @@ import { Pai } from './Pai';
 const {
   GameFieldWidth,
   GameFieldHeight,
-  ResultFieldWidth,
-  ResultFieldHeight,
+  KyokuResultFieldWidth,
+  KyokuResultFieldHeight,
   ResultPaiHeight,
 } = Constants;
 
-export const ResultField = () => {
+export const KyokuResultField = () => {
   const { agariInfo } = useContext(Context);
 
   return agariInfo.yakus.length >= 1 ? (
@@ -80,11 +80,11 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  width: ${ResultFieldWidth}px;
-  height: ${ResultFieldHeight}px;
+  width: ${KyokuResultFieldWidth}px;
+  height: ${KyokuResultFieldHeight}px;
   transform: translate(
-    ${(GameFieldWidth - ResultFieldWidth) / 2}px,
-    ${(GameFieldHeight - ResultFieldHeight) / 2}px
+    ${(GameFieldWidth - KyokuResultFieldWidth) / 2}px,
+    ${(GameFieldHeight - KyokuResultFieldHeight) / 2}px
   );
   transform-origin: center center 0;
   background: rgba(0, 0, 0, 0.7);
@@ -94,7 +94,7 @@ const Wrapper = styled.div`
 const Row = styled.div`
   display: flex;
   justify-content: space-around;
-  width: ${ResultFieldWidth}px;
+  width: ${KyokuResultFieldWidth}px;
 `;
 
 const Dora = styled.div`

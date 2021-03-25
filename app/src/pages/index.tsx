@@ -1,12 +1,7 @@
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
 import {
-  AgariInfoType,
-  Context,
-  defaultAgariInfo,
-  defaultGameInfo,
-  GameInfoType,
-  NoticeType,
+    AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, GameInfoType, NoticeType
 } from 'src/components/Context';
 import { Template } from 'src/components/Template';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
@@ -103,11 +98,12 @@ const Page = () => {
         if (myPrevAction !== 'cancel') await wait(300);
         await tsumo(data.body);
       }
-      if (data.type === 'pon_notice_message') {
-        await ponNotice(data.body);
+      if (data.type === 'dahai_message') {
+        if (data.body.who != 0) await wait(300);
+        await dahai(data.body);
       }
-      if (data.type === 'chi_notice_message') {
-        await chiNotice(data.body);
+      if (data.type === 'richi_complete_message') {
+        await richi_complete(data.body);
       }
       if (data.type === 'ankan_message') {
         await ankan(data.body);
@@ -125,10 +121,6 @@ const Page = () => {
       if (data.type === 'open_dora_message') {
         await openDora(data.body);
       }
-      if (data.type === 'dahai_message') {
-        if (data.body.who != 0) await wait(300);
-        await dahai(data.body);
-      }
       // 通知
       if (data.type == 'tsumoho_notice_message') {
         await tsumohoNotice();
@@ -141,6 +133,12 @@ const Page = () => {
       }
       if (data.type === 'ankan_notice_message') {
         await ankanNotice(data.body);
+      }
+      if (data.type === 'pon_notice_message') {
+        await ponNotice(data.body);
+      }
+      if (data.type === 'chi_notice_message') {
+        await chiNotice(data.body);
       }
     }
 
@@ -330,6 +328,18 @@ const Page = () => {
       if (body.richi) {
         tmpGameInfo.richiDeclarationPais.push(body.pai);
       }
+      return tmpGameInfo;
+    });
+  };
+
+  const richi_complete = async (body: {
+    scores: number[];
+    richis: boolean[];
+  }): Promise<void> => {
+    await setGameInfo((preGameInfo) => {
+      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      tmpGameInfo.scores = body.scores;
+      tmpGameInfo.richis = body.richis;
       return tmpGameInfo;
     });
   };
