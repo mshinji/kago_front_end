@@ -28,18 +28,15 @@ export const NoticeField = () => {
       <NoticeWrapper>
         <TsumohoNotice />
         <RonhoNotice />
-        {
-          // TODO 暗槓はリーチ後も表示
-          !isRichiDeclaration && (
-            <>
-              <RichiNotice />
-              <AnkanNotice />
-              <PonNotice />
-              <ChiNotice />
-              <CancelNotice />
-            </>
-          )
-        }
+        {!isRichiDeclaration && <RichiNotice />}
+        <AnkanNotice />
+        {!isRichiDeclaration && (
+          <>
+            <PonNotice />
+            <ChiNotice />
+            <CancelNotice />
+          </>
+        )}
       </NoticeWrapper>
     </Wrapper>
   );
