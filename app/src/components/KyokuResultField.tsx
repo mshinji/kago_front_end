@@ -105,7 +105,7 @@ const Wrapper = styled.div`
     ${(GameFieldHeight - KyokuResultFieldHeight) / 2}px
   );
   transform-origin: center center 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   color: white;
 `;
 
@@ -160,7 +160,7 @@ const Score = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 5px 10px;
-  background: green;
+  background: tan;
   border-radius: 10px;
 `;
 
