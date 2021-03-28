@@ -12,7 +12,7 @@ export type HuroType = {
 export type GameInfoType = {
   tehais: number[][];
   kawas: number[][];
-  richiDeclarationPais: number[];
+  richiPais: number[];
   huros: HuroType[][];
   kyoku: number;
   honba: number;
@@ -27,7 +27,7 @@ export type GameInfoType = {
 export const defaultGameInfo: GameInfoType = {
   tehais: [[], [], [], []],
   kawas: [[], [], [], []],
-  richiDeclarationPais: [],
+  richiPais: [],
   huros: [[], [], [], []],
   kyoku: 0,
   honba: 0,
@@ -67,12 +67,12 @@ type ContextType = {
   agariInfo: AgariInfoType;
   tsumohoNotices: boolean;
   ronhoNotices: boolean;
-  richiNotices: NoticeType;
+  richiNotices: boolean;
+  richiDeclareNotices: NoticeType;
   ankanNotices: NoticeType;
   minkanNotices: NoticeType;
   ponNotices: NoticeType;
   chiNotices: NoticeType;
-  isRichiDeclaration: boolean;
   isAnkanNoticeNested: boolean;
   isChiNoticeNested: boolean;
   isPonNoticeNested: boolean;

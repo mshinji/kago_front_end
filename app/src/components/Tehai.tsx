@@ -18,12 +18,7 @@ interface TehaiProps {
 }
 
 export const Tehai = (props: TehaiProps) => {
-  const {
-    gameInfo,
-    isRichiDeclaration,
-    richiNotices,
-    onClickDahai,
-  } = useContext(Context);
+  const { gameInfo, richiDeclareNotices, onClickDahai } = useContext(Context);
 
   return (
     <Wrapper who={props.who}>
@@ -33,9 +28,9 @@ export const Tehai = (props: TehaiProps) => {
           no={pai}
           height={TehaiPaiHeight}
           isDisabled={
-            isRichiDeclaration &&
             props.who == 0 &&
-            !richiNotices.map((notice) => notice.pai).includes(pai)
+            richiDeclareNotices.length > 0 &&
+            !richiDeclareNotices.map((notice) => notice.pai).includes(pai)
           }
           onClick={() => onClickDahai(pai)}
         />

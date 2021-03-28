@@ -24,11 +24,11 @@ export const Kawa = (props: KawaProps) => {
   return (
     <Wrapper who={props.who}>
       {[0, 1, 2, 3].map((i) => (
-        <Row>
+        <Row key={i}>
           {gameInfo.kawas[props.who]
             .slice(6 * i, 6 * (i + 1))
             .map((pai) =>
-              gameInfo.richiDeclarationPais.includes(pai) ? (
+              gameInfo.richiPais.includes(pai) ? (
                 <Pai
                   key={pai}
                   no={pai}
