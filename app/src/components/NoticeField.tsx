@@ -16,7 +16,7 @@ const {
 } = Constants;
 
 export const NoticeField = () => {
-  const { isRichiDeclaration } = useContext(Context);
+  const { richiDeclareNotices } = useContext(Context);
 
   return (
     <Wrapper>
@@ -28,15 +28,11 @@ export const NoticeField = () => {
       <NoticeWrapper>
         <TsumohoNotice />
         <RonhoNotice />
-        {!isRichiDeclaration && <RichiNotice />}
+        <RichiNotice />
         <AnkanNotice />
-        {!isRichiDeclaration && (
-          <>
-            <PonNotice />
-            <ChiNotice />
-            <CancelNotice />
-          </>
-        )}
+        <PonNotice />
+        <ChiNotice />
+        <CancelNotice />
       </NoticeWrapper>
     </Wrapper>
   );
@@ -66,10 +62,7 @@ const RonhoNotice = () => {
 const RichiNotice = () => {
   const { richiNotices, onClickRichiNotice } = useContext(Context);
   return (
-    <Notice
-      visible={richiNotices.length >= 1}
-      onClick={() => onClickRichiNotice()}
-    >
+    <Notice visible={richiNotices} onClick={() => onClickRichiNotice()}>
       リーチ
     </Notice>
   );
@@ -233,7 +226,7 @@ const CancelNotice = () => {
       visible={
         tsumohoNotices ||
         ronhoNotices ||
-        richiNotices.length >= 1 ||
+        richiNotices ||
         ankanNotices.length >= 1 ||
         minkanNotices.length >= 1 ||
         ponNotices.length >= 1 ||

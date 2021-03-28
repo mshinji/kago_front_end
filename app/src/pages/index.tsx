@@ -30,12 +30,14 @@ const Page = () => {
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
   const [tsumohoNotices, setTsumohoNotices] = useState<boolean>(false);
   const [ronhoNotices, setRonhoNotices] = useState<boolean>(false);
-  const [richiNotices, setRichiNotices] = useState<NoticeType>([]);
+  const [richiNotices, setRichiNotices] = useState<boolean>(false);
+  const [richiDeclareNotices, setRichiDeclareNotices] = useState<NoticeType>(
+    []
+  );
   const [ankanNotices, setAnkanNotices] = useState<NoticeType>([]);
   const [minkanNotices, setMinkanNotices] = useState<NoticeType>([]);
   const [ponNotices, setPonNotices] = useState<NoticeType>([]);
   const [chiNotices, setChiNotices] = useState<NoticeType>([]);
-  const [isRichiDeclaration, setIsRichiDeclaration] = useState<boolean>(false);
   const [isAnkanNoticeNested, setIsAnkanNoticeNested] = useState<boolean>(
     false
   );
@@ -75,6 +77,7 @@ const Page = () => {
   };
 
   const onMessage = async (event: IMessageEvent): Promise<void> => {
+    console.log(event.data);
     const datas: DataType[] = JSON.parse(event.data as string);
     if (datas.length === 0) return;
     console.log('receive:', datas);
@@ -101,6 +104,9 @@ const Page = () => {
       if (data.type === 'dahai_message') {
         if (data.body.who != 0) await wait(300);
         await dahai(data.body);
+      }
+      if (data.type === 'richi_bend_message') {
+        await richiBend(data.body);
       }
       if (data.type === 'richi_complete_message') {
         await richiComplete(data.body);
@@ -129,7 +135,10 @@ const Page = () => {
         await ronhoNotice();
       }
       if (data.type === 'richi_notice_message') {
-        await richiNotice(data.body);
+        await richiNotice();
+      }
+      if (data.type === 'richi_declare_notice_message') {
+        await richiDeclareNotice(data.body);
       }
       if (data.type === 'ankan_notice_message') {
         await ankanNotice(data.body);
@@ -141,6 +150,9 @@ const Page = () => {
         await chiNotice(data.body);
       }
     }
+
+    // リーチ後の自動打牌
+    // if (richi && datas.length === 1 && datas[0].type === 'tsumo_message') {
 
     await send({ type: 'next' });
   };
@@ -155,12 +167,8 @@ const Page = () => {
   };
 
   const onClickRichiNotice = async (): Promise<void> => {
-    await setIsRichiDeclaration(true);
-    const tmpRichiNotices: NoticeType = JSON.parse(
-      JSON.stringify(richiNotices)
-    );
+    await send({ type: 'richi_declare' });
     await resetNotices();
-    await setRichiNotices(tmpRichiNotices);
   };
 
   const onClickAnkanNotice = async (): Promise<void> => {
@@ -235,11 +243,11 @@ const Page = () => {
   };
 
   const onClickDahai = async (dahai: number): Promise<void> => {
+    await send({ type: 'cancel' });
     await send({
       type: 'dahai',
       body: {
         pai: dahai,
-        richi: isRichiDeclaration,
       },
     });
   };
@@ -249,7 +257,8 @@ const Page = () => {
     await setGameInfo;
     await setTsumohoNotices(false);
     await setRonhoNotices(false);
-    await setRichiNotices([]);
+    await setRichiNotices(false);
+    await setRichiDeclareNotices([]);
     await setAnkanNotices([]);
     await setMinkanNotices([]);
     await setPonNotices([]);
@@ -278,8 +287,12 @@ const Page = () => {
     await setRonhoNotices(true);
   };
 
-  const richiNotice = async (body: NoticeType): Promise<void> => {
-    await setRichiNotices(body);
+  const richiNotice = async (): Promise<void> => {
+    await setRichiNotices(true);
+  };
+
+  const richiDeclareNotice = async (body: NoticeType): Promise<void> => {
+    await setRichiDeclareNotices(body);
   };
 
   const ankanNotice = async (body: NoticeType): Promise<void> => {
@@ -306,7 +319,7 @@ const Page = () => {
     rest: number;
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo = JSON.parse(JSON.stringify(preGameInfo));
+      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who].push(body?.pai || body?.dummy);
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
@@ -317,12 +330,7 @@ const Page = () => {
     pai: number;
     dummy: number;
     who: number;
-    richi: boolean;
   }): Promise<void> => {
-    if (body.richi) {
-      await setIsRichiDeclaration(false);
-      await richiSound.play();
-    }
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
@@ -330,11 +338,26 @@ const Page = () => {
       );
       tmpGameInfo.tehais[body.who].sort((a, b) => (a > b ? 1 : -1));
       tmpGameInfo.kawas[body.who].push(body.pai);
-      if (body.richi) {
-        tmpGameInfo.richiDeclarationPais.push(body.pai);
-      }
       return tmpGameInfo;
     });
+  };
+
+  const richiBend = async (body: {
+    pai: number;
+    voice: boolean;
+  }): Promise<void> => {
+    if (body.voice) {
+      await richiSound.play();
+    }
+    await setGameInfo((preGameInfo) => {
+      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      tmpGameInfo.richiPais.push(body.pai);
+      return tmpGameInfo;
+    });
+  };
+
+  const richiDeclare = async (): Promise<void> => {
+    richiSound.play();
   };
 
   const richiComplete = async (body: {
@@ -357,9 +380,9 @@ const Page = () => {
     await kanSound.play();
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
-        (n) => !body.pais.includes(n) && !body.dummies.includes(n)
-      );
+      tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
+        .filter((n) => !body.pais.includes(n) && !body.dummies.includes(n))
+        .sort((a, b) => (a > b ? 1 : -1));
       tmpGameInfo.huros[body.who].push({
         type: 'ankan',
         pai: -1,
@@ -444,11 +467,11 @@ const Page = () => {
         tsumohoNotices,
         ronhoNotices,
         richiNotices,
+        richiDeclareNotices,
         ankanNotices,
         minkanNotices,
         ponNotices,
         chiNotices,
-        isRichiDeclaration,
         isAnkanNoticeNested,
         isPonNoticeNested,
         isChiNoticeNested,
