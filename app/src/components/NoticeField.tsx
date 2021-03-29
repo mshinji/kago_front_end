@@ -15,28 +15,24 @@ const {
   NoticeHeight,
 } = Constants;
 
-export const NoticeField = () => {
-  const { richiDeclareNotices } = useContext(Context);
-
-  return (
-    <Wrapper>
-      <NestedNoticeWrapper>
-        <NestedAnkanNotice />
-        <NestedPonNotice />
-        <NestedChiNotice />
-      </NestedNoticeWrapper>
-      <NoticeWrapper>
-        <TsumohoNotice />
-        <RonhoNotice />
-        <RichiNotice />
-        <AnkanNotice />
-        <PonNotice />
-        <ChiNotice />
-        <CancelNotice />
-      </NoticeWrapper>
-    </Wrapper>
-  );
-};
+export const NoticeField = () => (
+  <Wrapper>
+    <NestedNoticeWrapper>
+      <NestedAnkanNotice />
+      <NestedPonNotice />
+      <NestedChiNotice />
+    </NestedNoticeWrapper>
+    <NoticeWrapper>
+      <TsumohoNotice />
+      <RichiNotice />
+      <AnkanNotice />
+      <RonhoNotice />
+      <PonNotice />
+      <ChiNotice />
+      <CancelNotice />
+    </NoticeWrapper>
+  </Wrapper>
+);
 
 // ツモ和
 const TsumohoNotice = () => {
@@ -44,16 +40,6 @@ const TsumohoNotice = () => {
   return (
     <Notice visible={tsumohoNotices} onClick={() => onClickTsumohoNotice()}>
       ツモ
-    </Notice>
-  );
-};
-
-// ロン和
-const RonhoNotice = () => {
-  const { ronhoNotices, onClickRonhoNotice } = useContext(Context);
-  return (
-    <Notice visible={ronhoNotices} onClick={() => onClickRonhoNotice()}>
-      ロン
     </Notice>
   );
 };
@@ -118,6 +104,16 @@ const NestedAnkanNotice = () => {
         <></>
       )}
     </>
+  );
+};
+
+// ロン和
+const RonhoNotice = () => {
+  const { ronhoNotices, onClickRonhoNotice } = useContext(Context);
+  return (
+    <Notice visible={ronhoNotices} onClick={() => onClickRonhoNotice()}>
+      ロン
+    </Notice>
   );
 };
 
@@ -213,9 +209,9 @@ const NestedChiNotice = () => {
 const CancelNotice = () => {
   const {
     tsumohoNotices,
-    ronhoNotices,
     richiNotices,
     ankanNotices,
+    ronhoNotices,
     minkanNotices,
     ponNotices,
     chiNotices,
@@ -225,9 +221,9 @@ const CancelNotice = () => {
     <Notice
       visible={
         tsumohoNotices ||
-        ronhoNotices ||
         richiNotices ||
         ankanNotices.length >= 1 ||
+        ronhoNotices ||
         minkanNotices.length >= 1 ||
         ponNotices.length >= 1 ||
         chiNotices.length >= 1

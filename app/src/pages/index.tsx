@@ -14,7 +14,7 @@ type DataType = {
 const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`);
 const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
-// const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
+const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
 const richiSound = new Howl({ src: ['/static/sounds/richi.m4a'] });
 const kanSound = new Howl({ src: ['/static/sounds/kan.m4a'] });
 const ponSound = new Howl({ src: ['/static/sounds/pon.m4a'] });
@@ -68,7 +68,6 @@ const Page = () => {
     new Promise((resolve) => setTimeout(resolve, ms));
 
   // イベント関数
-
   const onReady = async (mode: number): Promise<void> => {
     if (isModeSelected) return;
 
@@ -94,12 +93,14 @@ const Page = () => {
         await startKyoku(data.body);
       }
       if (data.type === 'tsumoho_message') {
-        console.log('TSUMOHO!!!', data.body);
         await tsumoho(data.body);
       }
       if (data.type === 'tsumo_message') {
         if (myPrevAction !== 'cancel') await wait(300);
         await tsumo(data.body);
+      }
+      if (data.type === 'ankan_message') {
+        await ankan(data.body);
       }
       if (data.type === 'dahai_message') {
         if (data.body.who != 0) await wait(300);
@@ -111,8 +112,8 @@ const Page = () => {
       if (data.type === 'richi_complete_message') {
         await richiComplete(data.body);
       }
-      if (data.type === 'ankan_message') {
-        await ankan(data.body);
+      if (data.type === 'ronho_message') {
+        await ronho(data.body);
       }
       if (data.type === 'pon_message') {
         await wait(300);
@@ -283,9 +284,6 @@ const Page = () => {
   const tsumohoNotice = async (): Promise<void> => {
     await setTsumohoNotices(true);
   };
-  const ronhoNotice = async (): Promise<void> => {
-    await setRonhoNotices(true);
-  };
 
   const richiNotice = async (): Promise<void> => {
     await setRichiNotices(true);
@@ -297,6 +295,10 @@ const Page = () => {
 
   const ankanNotice = async (body: NoticeType): Promise<void> => {
     await setAnkanNotices(body);
+  };
+
+  const ronhoNotice = async (): Promise<void> => {
+    await setRonhoNotices(true);
   };
 
   const ponNotice = async (body: NoticeType): Promise<void> => {
@@ -356,10 +358,6 @@ const Page = () => {
     });
   };
 
-  const richiDeclare = async (): Promise<void> => {
-    richiSound.play();
-  };
-
   const richiComplete = async (body: {
     scores: number[];
     richis: boolean[];
@@ -392,6 +390,11 @@ const Page = () => {
       });
       return tmpGameInfo;
     });
+  };
+
+  const ronho = async (body: AgariInfoType): Promise<void> => {
+    await ronhoSound.play();
+    await setAgariInfo(body);
   };
 
   const pon = async (body: {
