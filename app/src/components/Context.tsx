@@ -88,6 +88,7 @@ type ContextType = {
   onClickNestedChiNotice: (i: number) => Promise<void>;
   onClickCancelNotice: () => Promise<void>;
   onClickDahai: (dahai: number) => Promise<void>;
+  onClickNextKyoku: () => Promise<void>;
 };
 
 export const Context = createContext({} as ContextType);

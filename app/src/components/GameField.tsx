@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { AgariResultField } from './AgariResultField';
 import { Constants } from './Constants';
 import { Huro } from './Huro';
 import { Hyoji } from './Hyoji';
 import { Kawa } from './Kawa';
-import { KyokuResultField } from './KyokuResultField';
 import { NoticeField } from './NoticeField';
 import { Tehai } from './Tehai';
 
@@ -28,7 +28,7 @@ export const GameField = () => {
       <Huro who={3} />
       <Hyoji />
       <NoticeField />
-      <KyokuResultField />
+      <AgariResultField />
     </Wrapper>
   );
 };

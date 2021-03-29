@@ -253,6 +253,10 @@ const Page = () => {
     });
   };
 
+  const onClickNextKyoku = async (): Promise<void> => {
+    await send({ type: 'next_kyoku' });
+  };
+
   // 局進行関数群
   const resetNotices = async (): Promise<void> => {
     await setGameInfo;
@@ -279,6 +283,7 @@ const Page = () => {
 
   const startKyoku = async (body: GameInfoType): Promise<void> => {
     await setGameInfo(body);
+    await setAgariInfo(defaultAgariInfo);
   };
 
   const tsumohoNotice = async (): Promise<void> => {
@@ -490,6 +495,7 @@ const Page = () => {
         onClickNestedChiNotice,
         onClickCancelNotice,
         onClickDahai,
+        onClickNextKyoku,
       }}
     >
       <Template></Template>;
