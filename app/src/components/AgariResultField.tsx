@@ -8,13 +8,13 @@ import { Pai } from './Pai';
 const {
   GameFieldWidth,
   GameFieldHeight,
-  KyokuResultFieldWidth,
-  KyokuResultFieldHeight,
+  AgariResultFieldWidth,
+  AgariResultFieldHeight,
   ResultPaiHeight,
 } = Constants;
 
-export const KyokuResultField = () => {
-  const { agariInfo } = useContext(Context);
+export const AgariResultField = () => {
+  const { agariInfo, onClickNextKyoku } = useContext(Context);
 
   return agariInfo.yakus.length >= 1 ? (
     <Wrapper>
@@ -87,6 +87,7 @@ export const KyokuResultField = () => {
           <CurrentScore>{agariInfo.scores[0]}</CurrentScore>
         </Score>
       </ScoreField>
+      <NextKyoku onClick={() => onClickNextKyoku()}>次</NextKyoku>
     </Wrapper>
   ) : (
     <></>
@@ -98,11 +99,11 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  width: ${KyokuResultFieldWidth}px;
-  height: ${KyokuResultFieldHeight}px;
+  width: ${AgariResultFieldWidth}px;
+  height: ${AgariResultFieldHeight}px;
   transform: translate(
-    ${(GameFieldWidth - KyokuResultFieldWidth) / 2}px,
-    ${(GameFieldHeight - KyokuResultFieldHeight) / 2}px
+    ${(GameFieldWidth - AgariResultFieldWidth) / 2}px,
+    ${(GameFieldHeight - AgariResultFieldHeight) / 2}px
   );
   transform-origin: center center 0;
   background: rgba(0, 0, 0, 0.8);
@@ -112,13 +113,13 @@ const Wrapper = styled.div`
 const Row = styled.div`
   display: flex;
   justify-content: space-around;
-  width: ${KyokuResultFieldWidth}px;
+  width: ${AgariResultFieldWidth}px;
 `;
 
 const Col = styled.div`
   display: flex;
   flex-direction: column;
-  width: ${KyokuResultFieldWidth / 2}px;
+  width: ${AgariResultFieldWidth / 2}px;
 `;
 
 const Dora = styled.div`
@@ -128,7 +129,7 @@ const Dora = styled.div`
 
 const YakuField = styled.div`
   display: flex;
-  width: ${KyokuResultFieldWidth}px;
+  width: ${AgariResultFieldWidth}px;
 `;
 
 const Yaku = styled.div`
@@ -141,11 +142,11 @@ const Yaku = styled.div`
 `;
 
 const YakuName = styled.div`
-  width: ${(KyokuResultFieldWidth * 2.5) / 8}px;
+  width: ${(AgariResultFieldWidth * 2.5) / 8}px;
 `;
 
 const YakuHan = styled.div`
-  width: ${(KyokuResultFieldWidth * 1) / 8}px;
+  width: ${(AgariResultFieldWidth * 1) / 8}px;
 `;
 
 const ScoreField = styled.div`
@@ -174,4 +175,15 @@ const ScoreMovement = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: red;
+`;
+
+const NextKyoku = styled.div`
+  width: ${AgariResultFieldWidth / 2}px;
+  font-size: 32px;
+  font-weight: bold;
+  margin-top: 20px;
+  border-radius: 20px;
+  background: white;
+  color: black;
+  text-align: center;
 `;

@@ -20,8 +20,8 @@ export const Constants = {
   NoticeFieldHeight: 160 /* NoticeHeigth * 2 + 20*/,
   NoticeWidth: 100,
   NoticeHeight: 70,
-  KyokuResultFieldWidth: 600,
-  KyokuResultFieldHeight: 600,
+  AgariResultFieldWidth: 600,
+  AgariResultFieldHeight: 600,
   // 牌の大きさ
   OriginalPaiHeight: 45,
   OriginalPaiWidth: 32,
