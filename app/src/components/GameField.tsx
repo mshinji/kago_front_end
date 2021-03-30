@@ -8,6 +8,7 @@ import { Hyoji } from './Hyoji';
 import { Kawa } from './Kawa';
 import { NoticeField } from './NoticeField';
 import { RyukyokuResultField } from './RyukyokuResultField';
+import { SyukyokuResultField } from './SyukyokuResultField';
 import { Tehai } from './Tehai';
 
 const { GameFieldHeight, GameFieldWidth } = Constants;
@@ -31,6 +32,7 @@ export const GameField = () => {
       <NoticeField />
       <AgariResultField />
       <RyukyokuResultField />
+      <SyukyokuResultField />
     </Wrapper>
   );
 };
