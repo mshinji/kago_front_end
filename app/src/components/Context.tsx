@@ -55,6 +55,16 @@ export const defaultAgariInfo: AgariInfoType = {
   scoreMovements: [],
 };
 
+export type RyukyokuInfoType = {
+  scores: number[];
+  scoreMovements: number[];
+};
+
+export const defaultRyukyokuInfo: RyukyokuInfoType = {
+  scores: [],
+  scoreMovements: [],
+};
+
 export type NoticeType = {
   pai: number;
   pais: number[];
@@ -65,6 +75,7 @@ export type NoticeType = {
 type ContextType = {
   gameInfo: GameInfoType;
   agariInfo: AgariInfoType;
+  ryukyokuInfo: RyukyokuInfoType;
   tsumohoNotices: boolean;
   ronhoNotices: boolean;
   richiNotices: boolean;

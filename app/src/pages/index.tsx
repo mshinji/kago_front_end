@@ -1,7 +1,8 @@
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
 import {
-    AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, GameInfoType, NoticeType
+    AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, defaultRyukyokuInfo, GameInfoType,
+    NoticeType, RyukyokuInfoType
 } from 'src/components/Context';
 import { Template } from 'src/components/Template';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
@@ -27,6 +28,9 @@ let myPrevAction = '';
 const Page = () => {
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [agariInfo, setAgariInfo] = useState<AgariInfoType>(defaultAgariInfo);
+  const [ryukyokuInfo, setRyukyokuInfo] = useState<RyukyokuInfoType>(
+    defaultRyukyokuInfo
+  );
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
   const [tsumohoNotices, setTsumohoNotices] = useState<boolean>(false);
   const [ronhoNotices, setRonhoNotices] = useState<boolean>(false);
@@ -127,6 +131,9 @@ const Page = () => {
       }
       if (data.type === 'open_dora_message') {
         await openDora(data.body);
+      }
+      if (data.type === 'ryukyoku_message') {
+        await ryukyoku(data.body);
       }
       // 通知
       if (data.type == 'tsumoho_notice_message') {
@@ -284,6 +291,7 @@ const Page = () => {
   const startKyoku = async (body: GameInfoType): Promise<void> => {
     await setGameInfo(body);
     await setAgariInfo(defaultAgariInfo);
+    await setRyukyokuInfo(defaultRyukyokuInfo);
   };
 
   const tsumohoNotice = async (): Promise<void> => {
@@ -467,11 +475,16 @@ const Page = () => {
     });
   };
 
+  const ryukyoku = async (body: RyukyokuInfoType): Promise<void> => {
+    await setRyukyokuInfo(body);
+  };
+
   return (
     <Context.Provider
       value={{
         gameInfo,
         agariInfo,
+        ryukyokuInfo,
         tsumohoNotices,
         ronhoNotices,
         richiNotices,
