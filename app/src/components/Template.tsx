@@ -16,6 +16,11 @@ export const Template = () => {
       <Message>麻雀</Message>
       <ModeSelect />
       <GameField />
+      <ApologizedMessage>
+        {
+          '大明槓・加槓は未実装！！ダブロンも未実装！！多分バグもたくさん！！すみません！！！'
+        }
+      </ApologizedMessage>
     </Wrapper>
   );
 };
@@ -34,3 +39,5 @@ const Message = styled.div`
   color: white;
   margin: 5px;
 `;
+
+const ApologizedMessage = styled.div``;

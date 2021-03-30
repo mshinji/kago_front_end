@@ -11,45 +11,32 @@ const {
   RyukyokuResultFieldHeight,
 } = Constants;
 
-export const RyukyokuResultField = () => {
-  const { ryukyokuInfo, onClickNextKyoku } = useContext(Context);
+export const SyukyokuResultField = () => {
+  const { syukyokuInfo } = useContext(Context);
 
-  return ryukyokuInfo.scoreMovements.length === 4 ? (
+  return syukyokuInfo.scores.length === 4 ? (
     <Wrapper>
-      <Title>流局</Title>
+      <Title>終局</Title>
       <ScoreField>
         <Score>
-          <ScoreMovement>
-            {ryukyokuInfo.scoreMovements[2] > 0 ? '+' : ''}
-            {ryukyokuInfo.scoreMovements[2]}
-          </ScoreMovement>
-          <CurrentScore>{ryukyokuInfo.scores[2]}</CurrentScore>
+          <Rank>{syukyokuInfo.ranks[2]}位</Rank>
+          <CurrentScore>{syukyokuInfo.scores[2]}</CurrentScore>
         </Score>
         <Row>
           <Score>
-            <ScoreMovement>
-              {ryukyokuInfo.scoreMovements[3] > 0 ? '+' : ''}
-              {ryukyokuInfo.scoreMovements[3]}
-            </ScoreMovement>
-            <CurrentScore>{ryukyokuInfo.scores[3]}</CurrentScore>
+            <Rank>{syukyokuInfo.ranks[3]}位</Rank>
+            <CurrentScore>{syukyokuInfo.scores[3]}</CurrentScore>
           </Score>
           <Score>
-            <ScoreMovement>
-              {ryukyokuInfo.scoreMovements[1] > 0 ? '+' : ''}
-              {ryukyokuInfo.scoreMovements[1]}
-            </ScoreMovement>
-            <CurrentScore>{ryukyokuInfo.scores[1]}</CurrentScore>
+            <Rank>{syukyokuInfo.ranks[1]}位</Rank>
+            <CurrentScore>{syukyokuInfo.scores[1]}</CurrentScore>
           </Score>
         </Row>
         <Score>
-          <ScoreMovement>
-            {ryukyokuInfo.scoreMovements[0] > 0 ? '+' : ''}
-            {ryukyokuInfo.scoreMovements[0]}
-          </ScoreMovement>
-          <CurrentScore>{ryukyokuInfo.scores[0]}</CurrentScore>
+          <Rank>{syukyokuInfo.ranks[0]}位</Rank>
+          <CurrentScore>{syukyokuInfo.scores[0]}</CurrentScore>
         </Score>
       </ScoreField>
-      <NextKyoku onClick={() => onClickNextKyoku()}>次</NextKyoku>
     </Wrapper>
   ) : (
     <></>
@@ -104,19 +91,8 @@ const CurrentScore = styled.div`
   color: white;
 `;
 
-const ScoreMovement = styled.div`
-  font-size: 16px;
+const Rank = styled.div`
+  font-size: 20px;
   font-weight: bold;
   color: red;
-`;
-
-const NextKyoku = styled.div`
-  width: ${RyukyokuResultFieldWidth / 2}px;
-  font-size: 32px;
-  font-weight: bold;
-  margin-top: 20px;
-  border-radius: 20px;
-  background: white;
-  color: black;
-  text-align: center;
 `;

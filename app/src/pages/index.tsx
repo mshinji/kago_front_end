@@ -1,8 +1,8 @@
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
 import {
-    AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, defaultRyukyokuInfo, GameInfoType,
-    NoticeType, RyukyokuInfoType
+    AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, defaultRyukyokuInfo,
+    defaultSyukyokuInfo, GameInfoType, NoticeType, RyukyokuInfoType, SyukyokuInfoType
 } from 'src/components/Context';
 import { Template } from 'src/components/Template';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
@@ -30,6 +30,9 @@ const Page = () => {
   const [agariInfo, setAgariInfo] = useState<AgariInfoType>(defaultAgariInfo);
   const [ryukyokuInfo, setRyukyokuInfo] = useState<RyukyokuInfoType>(
     defaultRyukyokuInfo
+  );
+  const [syukyokuInfo, setSyukyokuInfo] = useState<SyukyokuInfoType>(
+    defaultSyukyokuInfo
   );
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
   const [tsumohoNotices, setTsumohoNotices] = useState<boolean>(false);
@@ -97,6 +100,7 @@ const Page = () => {
         await startKyoku(data.body);
       }
       if (data.type === 'tsumoho_message') {
+        await wait(300);
         await tsumoho(data.body);
       }
       if (data.type === 'tsumo_message') {
@@ -117,6 +121,7 @@ const Page = () => {
         await richiComplete(data.body);
       }
       if (data.type === 'ronho_message') {
+        await wait(300);
         await ronho(data.body);
       }
       if (data.type === 'pon_message') {
@@ -133,7 +138,11 @@ const Page = () => {
         await openDora(data.body);
       }
       if (data.type === 'ryukyoku_message') {
+        await wait(300);
         await ryukyoku(data.body);
+      }
+      if (data.type === 'syukyoku_message') {
+        await syukyoku(data.body);
       }
       // 通知
       if (data.type == 'tsumoho_notice_message') {
@@ -158,9 +167,6 @@ const Page = () => {
         await chiNotice(data.body);
       }
     }
-
-    // リーチ後の自動打牌
-    // if (richi && datas.length === 1 && datas[0].type === 'tsumo_message') {
 
     await send({ type: 'next' });
   };
@@ -479,12 +485,19 @@ const Page = () => {
     await setRyukyokuInfo(body);
   };
 
+  const syukyoku = async (body: SyukyokuInfoType): Promise<void> => {
+    await setAgariInfo(defaultAgariInfo);
+    await setRyukyokuInfo(defaultRyukyokuInfo);
+    await setSyukyokuInfo(body);
+  };
+
   return (
     <Context.Provider
       value={{
         gameInfo,
         agariInfo,
         ryukyokuInfo,
+        syukyokuInfo,
         tsumohoNotices,
         ronhoNotices,
         richiNotices,
