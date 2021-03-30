@@ -40,4 +40,6 @@ const Message = styled.div`
   margin: 5px;
 `;
 
-const ApologizedMessage = styled.div``;
+const ApologizedMessage = styled.div`
+  color: white;
+`;
