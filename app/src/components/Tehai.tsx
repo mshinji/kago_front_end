@@ -24,7 +24,7 @@ export const Tehai = (props: TehaiProps) => {
     <Wrapper who={props.who}>
       {gameInfo.tehais[props.who].map((pai) => (
         <Pai
-          key={'pai' + pai}
+          key={pai}
           no={pai}
           height={TehaiPaiHeight}
           isDisabled={
