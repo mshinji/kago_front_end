@@ -341,7 +341,9 @@ const Page = () => {
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
-      tmpGameInfo.tehais[body.who].push(body?.pai || body?.dummy);
+      body.pai !== undefined
+        ? tmpGameInfo.tehais[body.who].push(body.pai)
+        : tmpGameInfo.tehais[body.who].push(body.dummy);
       tmpGameInfo.rest = body.rest;
       return tmpGameInfo;
     });
