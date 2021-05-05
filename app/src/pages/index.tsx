@@ -90,78 +90,82 @@ const Page = () => {
 
     for (const data of datas) {
       // 受信対応
-      if (data.type === 'start_game') {
-        await startGame();
-      }
-      if (data.type === 'start_kyoku_message') {
-        await startKyoku(data.body);
-      }
-      if (data.type === 'tsumoho_message') {
-        await wait(300);
-        await tsumoho(data.body);
-      }
-      if (data.type === 'tsumo_message') {
-        if (myPrevAction !== 'cancel') await wait(300);
-        await tsumo(data.body);
-      }
-      if (data.type === 'ankan_message') {
-        await ankan(data.body);
-      }
-      if (data.type === 'dahai_message') {
-        if (data.body.who != 0) await wait(300);
-        await dahai(data.body);
-      }
-      if (data.type === 'richi_bend_message') {
-        await richiBend(data.body);
-      }
-      if (data.type === 'richi_complete_message') {
-        await richiComplete(data.body);
-      }
-      if (data.type === 'ronho_message') {
-        await wait(300);
-        await ronho(data.body);
-      }
-      if (data.type === 'pon_message') {
-        await wait(300);
-        await pon(data.body);
-        await wait(300);
-      }
-      if (data.type === 'chi_message') {
-        await wait(300);
-        await chi(data.body);
-        await wait(300);
-      }
-      if (data.type === 'open_dora_message') {
-        await openDora(data.body);
-      }
-      if (data.type === 'ryukyoku_message') {
-        await wait(300);
-        await ryukyoku(data.body);
-      }
-      if (data.type === 'syukyoku_message') {
-        await syukyoku(data.body);
-      }
-      // 通知
-      if (data.type == 'tsumoho_notice_message') {
-        await tsumohoNotice();
-      }
-      if (data.type == 'ronho_notice_message') {
-        await ronhoNotice();
-      }
-      if (data.type === 'richi_notice_message') {
-        await richiNotice();
-      }
-      if (data.type === 'richi_declare_notice_message') {
-        await richiDeclareNotice(data.body);
-      }
-      if (data.type === 'ankan_notice_message') {
-        await ankanNotice(data.body);
-      }
-      if (data.type === 'pon_notice_message') {
-        await ponNotice(data.body);
-      }
-      if (data.type === 'chi_notice_message') {
-        await chiNotice(data.body);
+      switch (data.type) {
+        case 'start_game':
+          await startGame();
+          break;
+        case 'start_kyoku_message':
+          await startKyoku(data.body);
+          break;
+        case 'tsumoho_message':
+          await wait(300);
+          await tsumoho(data.body);
+          break;
+        case 'tsumo_message':
+          // if (myPrevAction !== 'cancel')
+          await wait(300);
+          await tsumo(data.body);
+          break;
+        case 'ankan_message':
+          await ankan(data.body);
+          break;
+        case 'dahai_message':
+          // if (data.body.who != 0)
+          await wait(300);
+          await dahai(data.body);
+          break;
+        case 'richi_bend_message':
+          await richiBend(data.body);
+          break;
+        case 'richi_complete_message':
+          await richiComplete(data.body);
+          break;
+        case 'ronho_message':
+          await wait(300);
+          await ronho(data.body);
+          break;
+        case 'pon_message':
+          await wait(300);
+          await pon(data.body);
+          await wait(300);
+          break;
+        case 'chi_message':
+          await wait(300);
+          await chi(data.body);
+          await wait(300);
+          break;
+        case 'open_dora_message':
+          await openDora(data.body);
+          break;
+        case 'ryukyoku_message':
+          await wait(300);
+          await ryukyoku(data.body);
+          break;
+        case 'syukyoku_message':
+          await syukyoku(data.body);
+          break;
+        // 通知
+        case 'tsumoho_notice_message':
+          await tsumohoNotice();
+          break;
+        case 'ronho_notice_message':
+          await ronhoNotice();
+          break;
+        case 'richi_notice_message':
+          await richiNotice();
+          break;
+        case 'richi_declare_notice_message':
+          await richiDeclareNotice(data.body);
+          break;
+        case 'ankan_notice_message':
+          await ankanNotice(data.body);
+          break;
+        case 'pon_notice_message':
+          await ponNotice(data.body);
+          break;
+        case 'chi_notice_message':
+          await chiNotice(data.body);
+          break;
       }
     }
 
