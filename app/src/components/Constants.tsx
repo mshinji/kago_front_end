@@ -1,6 +1,7 @@
 export const Constants = {
   NormalMode: 0,
   VisibleMode: 1,
+  AutoMode: 2,
   TemplateWidth: 780,
   GameFieldWidth: 780,
   GameFieldHeight: 780,
