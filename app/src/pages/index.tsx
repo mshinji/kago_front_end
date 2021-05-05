@@ -22,7 +22,6 @@ const ponSound = new Howl({ src: ['/static/sounds/pon.m4a'] });
 const chiSound = new Howl({ src: ['/static/sounds/chi.m4a'] });
 
 // 変数
-let token = '';
 let myPrevAction = '';
 
 const Page = () => {
@@ -59,7 +58,6 @@ const Page = () => {
 
   // 便利関数群
   const send = async (data: any): Promise<void> => {
-    data.token = token;
     myPrevAction = data.type;
 
     if (ws.readyState === 1) {
@@ -83,7 +81,6 @@ const Page = () => {
   };
 
   const onMessage = async (event: IMessageEvent): Promise<void> => {
-    console.log(event.data);
     const datas: DataType[] = JSON.parse(event.data as string);
     if (datas.length === 0) return;
     console.log('receive:', datas);
@@ -94,7 +91,7 @@ const Page = () => {
     for (const data of datas) {
       // 受信対応
       if (data.type === 'start_game') {
-        await startGame(data.body);
+        await startGame();
       }
       if (data.type === 'start_kyoku_message') {
         await startKyoku(data.body);
@@ -290,10 +287,7 @@ const Page = () => {
     await setIsChiNoticeNested(false);
   };
 
-  const startGame = async (body: { token: string }): Promise<void> => {
-    token = body.token;
-  };
-
+  const startGame = async () => {};
   const startKyoku = async (body: GameInfoType): Promise<void> => {
     await setGameInfo(body);
     await setAgariInfo(defaultAgariInfo);
