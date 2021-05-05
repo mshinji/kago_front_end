@@ -1,5 +1,6 @@
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
+import { Constants } from 'src/components/Constants';
 import {
     AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, defaultRyukyokuInfo,
     defaultSyukyokuInfo, GameInfoType, NoticeType, RyukyokuInfoType, SyukyokuInfoType
@@ -21,8 +22,11 @@ const kanSound = new Howl({ src: ['/static/sounds/kan.m4a'] });
 const ponSound = new Howl({ src: ['/static/sounds/pon.m4a'] });
 const chiSound = new Howl({ src: ['/static/sounds/chi.m4a'] });
 
+const { AutoMode } = Constants;
+
 // 変数
 let myPrevAction = '';
+let selectedMode: null | number = null;
 
 const Page = () => {
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
@@ -76,6 +80,7 @@ const Page = () => {
   const onReady = async (mode: number): Promise<void> => {
     if (isModeSelected) return;
 
+    selectedMode = mode;
     await setIsModeSelected(true);
     await send({ type: 'ready', mode: mode });
   };
@@ -102,16 +107,18 @@ const Page = () => {
           await tsumoho(data.body);
           break;
         case 'tsumo_message':
-          // if (myPrevAction !== 'cancel')
-          await wait(300);
+          if (myPrevAction !== 'cancel') {
+            await wait(300);
+          }
           await tsumo(data.body);
           break;
         case 'ankan_message':
           await ankan(data.body);
           break;
         case 'dahai_message':
-          // if (data.body.who != 0)
-          await wait(300);
+          if (data.body.who != 0 && selectedMode !== AutoMode) {
+            await wait(300);
+          }
           await dahai(data.body);
           break;
         case 'richi_bend_message':
