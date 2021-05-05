@@ -4,11 +4,12 @@ import styled from 'styled-components';
 import { Constants } from './Constants';
 import { Context } from './Context';
 
+const { NormalMode, VisibleMode, AutoMode, GameFieldWidth } = Constants;
+
 export const ModeSelect = () => {
   const { onReady } = useContext(Context);
-  const { NormalMode, VisibleMode, AutoMode, GameFieldWidth } = Constants;
   return (
-    <Wrapper width={GameFieldWidth}>
+    <Wrapper>
       <Mode onClick={() => onReady(NormalMode)}>通常モード</Mode>
       <Mode onClick={() => onReady(VisibleMode)}>可視化モード</Mode>
       <Mode onClick={() => onReady(AutoMode)}>自動対戦モード</Mode>
@@ -16,13 +17,11 @@ export const ModeSelect = () => {
   );
 };
 
-const Wrapper = styled.div.attrs((props: { width: number }) => ({
-  width: props.width,
-}))`
+const Wrapper = styled.div`
   display: flex;
   justify-content: space-around;
-  width: ${(props) => props.width}px;
-  /* background: gray; */
+  width: ${GameFieldWidth}px;
+  margin: 10px 0;
 `;
 
 const Mode = styled.div`

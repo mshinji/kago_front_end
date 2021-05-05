@@ -2,25 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { Constants } from './Constants';
+import { Footer } from './Footer';
 import { GameField } from './GameField';
+import { Header } from './Header';
 import { ModeSelect } from './ModeSelect';
-
-// import { Header } from './Header';
 
 const { TemplateWidth } = Constants;
 
 export const Template = () => {
   return (
     <Wrapper>
-      {/* <Header /> */}
-      <Message>麻雀</Message>
+      <Header />
       <ModeSelect />
       <GameField />
-      <ApologizedMessage>
-        {
-          '大明槓・加槓は未実装！！ダブロンも未実装！！多分バグもたくさん！！すみません！！！'
-        }
-      </ApologizedMessage>
+      <Footer />
     </Wrapper>
   );
 };
@@ -33,13 +28,4 @@ const Wrapper = styled.div`
   min-width: ${TemplateWidth}px;
   min-height: 100%;
   background: black;
-`;
-
-const Message = styled.div`
-  color: white;
-  margin: 5px;
-`;
-
-const ApologizedMessage = styled.div`
-  color: white;
 `;

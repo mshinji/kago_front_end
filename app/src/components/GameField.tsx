@@ -42,4 +42,5 @@ const Wrapper = styled.div`
   height: ${GameFieldHeight}px;
   z-index: 0;
   background-color: darkslategray;
+  margin-bottom: 10px;
 `;
