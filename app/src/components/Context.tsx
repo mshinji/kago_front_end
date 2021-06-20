@@ -98,7 +98,7 @@ type ContextType = {
   isAnkanNoticeNested: boolean;
   isChiNoticeNested: boolean;
   isPonNoticeNested: boolean;
-  onReady: (mode: number) => Promise<void>;
+  startGame: (mode: number) => Promise<void>;
   onClickTsumohoNotice: () => Promise<void>;
   onClickRonhoNotice: () => Promise<void>;
   onClickRichiNotice: () => Promise<void>;

@@ -31,12 +31,10 @@ let selectedMode: null | number = null;
 const Page = () => {
   const [gameInfo, setGameInfo] = useState<GameInfoType>(defaultGameInfo);
   const [agariInfo, setAgariInfo] = useState<AgariInfoType>(defaultAgariInfo);
-  const [ryukyokuInfo, setRyukyokuInfo] = useState<RyukyokuInfoType>(
-    defaultRyukyokuInfo
-  );
-  const [syukyokuInfo, setSyukyokuInfo] = useState<SyukyokuInfoType>(
-    defaultSyukyokuInfo
-  );
+  const [ryukyokuInfo, setRyukyokuInfo] =
+    useState<RyukyokuInfoType>(defaultRyukyokuInfo);
+  const [syukyokuInfo, setSyukyokuInfo] =
+    useState<SyukyokuInfoType>(defaultSyukyokuInfo);
   const [isModeSelected, setIsModeSelected] = useState<boolean>(false);
   const [tsumohoNotices, setTsumohoNotices] = useState<boolean>(false);
   const [ronhoNotices, setRonhoNotices] = useState<boolean>(false);
@@ -48,9 +46,8 @@ const Page = () => {
   const [minkanNotices, setMinkanNotices] = useState<NoticeType>([]);
   const [ponNotices, setPonNotices] = useState<NoticeType>([]);
   const [chiNotices, setChiNotices] = useState<NoticeType>([]);
-  const [isAnkanNoticeNested, setIsAnkanNoticeNested] = useState<boolean>(
-    false
-  );
+  const [isAnkanNoticeNested, setIsAnkanNoticeNested] =
+    useState<boolean>(false);
   const [isChiNoticeNested, setIsChiNoticeNested] = useState<boolean>(false);
   const [isPonNoticeNested, setIsPonNoticeNested] = useState<boolean>(false);
 
@@ -77,12 +74,12 @@ const Page = () => {
     new Promise((resolve) => setTimeout(resolve, ms));
 
   // イベント関数
-  const onReady = async (mode: number): Promise<void> => {
+  const startGame = async (mode: number): Promise<void> => {
     if (isModeSelected) return;
 
     selectedMode = mode;
     await setIsModeSelected(true);
-    await send({ type: 'ready', mode: mode });
+    await send({ type: 'start_game', mode: mode });
   };
 
   const onMessage = async (event: IMessageEvent): Promise<void> => {
@@ -96,9 +93,6 @@ const Page = () => {
     for (const data of datas) {
       // 受信対応
       switch (data.type) {
-        case 'start_game':
-          await startGame();
-          break;
         case 'start_kyoku_message':
           await startKyoku(data.body);
           break;
@@ -298,7 +292,6 @@ const Page = () => {
     await setIsChiNoticeNested(false);
   };
 
-  const startGame = async () => {};
   const startKyoku = async (body: GameInfoType): Promise<void> => {
     await setGameInfo(body);
     await setAgariInfo(defaultAgariInfo);
@@ -516,7 +509,7 @@ const Page = () => {
         isAnkanNoticeNested,
         isPonNoticeNested,
         isChiNoticeNested,
-        onReady,
+        startGame,
         onClickTsumohoNotice,
         onClickRonhoNotice,
         onClickRichiNotice,
