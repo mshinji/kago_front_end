@@ -1,5 +1,5 @@
 import { Howl } from 'howler';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
 import { Constants } from '~/src/components/Constants';
 import {
@@ -59,12 +59,6 @@ const Page = () => {
   const [isChiNoticeNested, setIsChiNoticeNested] = useState<boolean>(false);
   const [isPonNoticeNested, setIsPonNoticeNested] = useState<boolean>(false);
 
-  useEffect(() => {
-    // WebSocket
-    ws.onmessage = async (event: IMessageEvent) => await onMessage(event);
-    ws.onclose = async () => await onClose();
-  }, []);
-
   // 便利関数群
   const send = async (data: any): Promise<void> => {
     myPrevAction = data.type;
@@ -88,97 +82,6 @@ const Page = () => {
     selectedMode = mode;
     await setIsModeSelected(true);
     await send({ type: 'start_game', mode: mode });
-  };
-
-  const onMessage = async (event: IMessageEvent): Promise<void> => {
-    const datas: DataType[] = JSON.parse(event.data as string);
-    if (datas.length === 0) return;
-    console.log('receive:', datas);
-
-    // 通知リセット
-    await resetNotices();
-
-    for (const data of datas) {
-      // 受信対応
-      switch (data.type) {
-        case 'start_kyoku_message':
-          await startKyoku(data.body);
-          break;
-        case 'tsumoho_message':
-          await wait(300);
-          await tsumoho(data.body);
-          break;
-        case 'tsumo_message':
-          if (myPrevAction !== 'cancel') {
-            await wait(300);
-          }
-          await tsumo(data.body);
-          break;
-        case 'ankan_message':
-          await ankan(data.body);
-          break;
-        case 'dahai_message':
-          if (data.body.who != 0 && selectedMode !== AutoMode) {
-            await wait(300);
-          }
-          await dahai(data.body);
-          break;
-        case 'richi_bend_message':
-          await richiBend(data.body);
-          break;
-        case 'richi_complete_message':
-          await richiComplete(data.body);
-          break;
-        case 'ronho_message':
-          await wait(300);
-          await ronho(data.body);
-          break;
-        case 'pon_message':
-          await wait(300);
-          await pon(data.body);
-          await wait(300);
-          break;
-        case 'chi_message':
-          await wait(300);
-          await chi(data.body);
-          await wait(300);
-          break;
-        case 'open_dora_message':
-          await openDora(data.body);
-          break;
-        case 'ryukyoku_message':
-          await wait(300);
-          await ryukyoku(data.body);
-          break;
-        case 'syukyoku_message':
-          await syukyoku(data.body);
-          break;
-        // 通知
-        case 'tsumoho_notice_message':
-          await tsumohoNotice();
-          break;
-        case 'ronho_notice_message':
-          await ronhoNotice();
-          break;
-        case 'richi_notice_message':
-          await richiNotice();
-          break;
-        case 'richi_declare_notice_message':
-          await richiDeclareNotice(data.body);
-          break;
-        case 'ankan_notice_message':
-          await ankanNotice(data.body);
-          break;
-        case 'pon_notice_message':
-          await ponNotice(data.body);
-          break;
-        case 'chi_notice_message':
-          await chiNotice(data.body);
-          break;
-      }
-    }
-
-    await send({ type: 'next' });
   };
 
   const onClose = async (): Promise<void> => console.log('WebSocketClosed...');
@@ -281,7 +184,7 @@ const Page = () => {
   };
 
   // 局進行関数群
-  const resetNotices = async (): Promise<void> => {
+  const resetNotices = useCallback(async () => {
     await setGameInfo;
     await setTsumohoNotices(false);
     await setRonhoNotices(false);
@@ -292,7 +195,7 @@ const Page = () => {
     await setPonNotices([]);
     await setChiNotices([]);
     await resetIsNoticeNested();
-  };
+  }, []);
 
   const resetIsNoticeNested = async (): Promise<void> => {
     await setIsAnkanNoticeNested(false);
@@ -498,6 +401,106 @@ const Page = () => {
     await setRyukyokuInfo(defaultRyukyokuInfo);
     await setSyukyokuInfo(body);
   };
+
+  const onMessage = useCallback(
+    async (event: IMessageEvent): Promise<void> => {
+      const datas: DataType[] = JSON.parse(event.data as string);
+      if (datas.length === 0) return;
+      console.log('receive:', datas);
+
+      // 通知リセット
+      await resetNotices();
+
+      for (const data of datas) {
+        // 受信対応
+        switch (data.type) {
+          case 'start_kyoku_message':
+            await startKyoku(data.body);
+            break;
+          case 'tsumoho_message':
+            await wait(300);
+            await tsumoho(data.body);
+            break;
+          case 'tsumo_message':
+            if (myPrevAction !== 'cancel') {
+              await wait(300);
+            }
+            await tsumo(data.body);
+            break;
+          case 'ankan_message':
+            await ankan(data.body);
+            break;
+          case 'dahai_message':
+            if (data.body.who != 0 && selectedMode !== AutoMode) {
+              await wait(300);
+            }
+            await dahai(data.body);
+            break;
+          case 'richi_bend_message':
+            await richiBend(data.body);
+            break;
+          case 'richi_complete_message':
+            await richiComplete(data.body);
+            break;
+          case 'ronho_message':
+            await wait(300);
+            await ronho(data.body);
+            break;
+          case 'pon_message':
+            await wait(300);
+            await pon(data.body);
+            await wait(300);
+            break;
+          case 'chi_message':
+            await wait(300);
+            await chi(data.body);
+            await wait(300);
+            break;
+          case 'open_dora_message':
+            await openDora(data.body);
+            break;
+          case 'ryukyoku_message':
+            await wait(300);
+            await ryukyoku(data.body);
+            break;
+          case 'syukyoku_message':
+            await syukyoku(data.body);
+            break;
+          // 通知
+          case 'tsumoho_notice_message':
+            await tsumohoNotice();
+            break;
+          case 'ronho_notice_message':
+            await ronhoNotice();
+            break;
+          case 'richi_notice_message':
+            await richiNotice();
+            break;
+          case 'richi_declare_notice_message':
+            await richiDeclareNotice(data.body);
+            break;
+          case 'ankan_notice_message':
+            await ankanNotice(data.body);
+            break;
+          case 'pon_notice_message':
+            await ponNotice(data.body);
+            break;
+          case 'chi_notice_message':
+            await chiNotice(data.body);
+            break;
+        }
+      }
+
+      await send({ type: 'next' });
+    },
+    [resetNotices]
+  );
+
+  useEffect(() => {
+    // WebSocket
+    ws.onmessage = async (event: IMessageEvent) => await onMessage(event);
+    ws.onclose = async () => await onClose();
+  }, [onMessage]);
 
   return (
     <Context.Provider
