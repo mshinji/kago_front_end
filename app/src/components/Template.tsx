@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { Constants } from './Constants';
 import { Footer } from './Footer';
 import { GameField } from './GameField';

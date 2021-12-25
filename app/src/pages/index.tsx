@@ -1,12 +1,12 @@
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
+import { IMessageEvent, w3cwebsocket } from 'websocket';
 import { Constants } from 'src/components/Constants';
 import {
     AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, defaultRyukyokuInfo,
     defaultSyukyokuInfo, GameInfoType, NoticeType, RyukyokuInfoType, SyukyokuInfoType
 } from 'src/components/Context';
 import { Template } from 'src/components/Template';
-import { IMessageEvent, w3cwebsocket } from 'websocket';
 
 type DataType = {
   type: string;
@@ -338,7 +338,7 @@ const Page = () => {
     rest: number;
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       body.pai !== undefined
         ? tmpGameInfo.tehais[body.who].push(body.pai)
         : tmpGameInfo.tehais[body.who].push(body.dummy);
@@ -353,7 +353,7 @@ const Page = () => {
     who: number;
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter(
         (n) => n !== body.pai && n !== body.dummy
       );
@@ -371,7 +371,7 @@ const Page = () => {
       await richiSound.play();
     }
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.richiPais.push(body.pai);
       return tmpGameInfo;
     });
@@ -382,7 +382,7 @@ const Page = () => {
     richis: boolean[];
   }): Promise<void> => {
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.scores = body.scores;
       tmpGameInfo.richis = body.richis;
       return tmpGameInfo;
@@ -396,7 +396,7 @@ const Page = () => {
   }): Promise<void> => {
     await kanSound.play();
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
         .filter((n) => !body.pais.includes(n) && !body.dummies.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
@@ -425,7 +425,7 @@ const Page = () => {
   }): Promise<void> => {
     await ponSound.play();
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
         .filter((n) => !body.pais.includes(n) && !body.dummies.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
@@ -450,7 +450,7 @@ const Page = () => {
   }): Promise<void> => {
     await chiSound.play();
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who]
         .filter((n) => !body.pais.includes(n) && !body.dummies.includes(n))
         .sort((a, b) => (a > b ? 1 : -1));
@@ -472,7 +472,7 @@ const Page = () => {
     rest: number;
   }) => {
     await setGameInfo((preGameInfo) => {
-      let tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
+      const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo));
       tmpGameInfo.dora = tmpGameInfo.dora.map((n) =>
         n === body.dummy ? body.pai : n
       );
