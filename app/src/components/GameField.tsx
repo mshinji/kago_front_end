@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-
 import { AgariResultField } from './AgariResultField';
 import { Constants } from './Constants';
 import { Huro } from './Huro';
