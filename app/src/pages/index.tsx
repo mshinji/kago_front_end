@@ -1,12 +1,20 @@
 import { Howl } from 'howler';
 import React, { useEffect, useState } from 'react';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
-import { Constants } from 'src/components/Constants';
+import { Constants } from '~/src/components/Constants';
 import {
-    AgariInfoType, Context, defaultAgariInfo, defaultGameInfo, defaultRyukyokuInfo,
-    defaultSyukyokuInfo, GameInfoType, NoticeType, RyukyokuInfoType, SyukyokuInfoType
-} from 'src/components/Context';
-import { Template } from 'src/components/Template';
+  AgariInfoType,
+  Context,
+  defaultAgariInfo,
+  defaultGameInfo,
+  defaultRyukyokuInfo,
+  defaultSyukyokuInfo,
+  GameInfoType,
+  NoticeType,
+  RyukyokuInfoType,
+  SyukyokuInfoType,
+} from '~/src/components/Context';
+import { Template } from '~/src/components/Template';
 
 type DataType = {
   type: string;
