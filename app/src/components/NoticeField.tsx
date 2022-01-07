@@ -67,11 +67,8 @@ const AnkanNotice = () => {
 };
 
 const NestedAnkanNotice = () => {
-  const {
-    ankanNotices,
-    isAnkanNoticeNested,
-    onClickNestedAnkanNotice,
-  } = useContext(Context);
+  const { ankanNotices, isAnkanNoticeNested, onClickNestedAnkanNotice } =
+    useContext(Context);
   return (
     <>
       {isAnkanNoticeNested ? (
@@ -127,9 +124,8 @@ const PonNotice = () => {
 };
 
 const NestedPonNotice = () => {
-  const { ponNotices, isPonNoticeNested, onClickNestedPonNotice } = useContext(
-    Context
-  );
+  const { ponNotices, isPonNoticeNested, onClickNestedPonNotice } =
+    useContext(Context);
   return (
     <>
       {isPonNoticeNested ? (
@@ -144,7 +140,7 @@ const NestedPonNotice = () => {
                     key={ponNotice.pai}
                     no={ponNotice.pai}
                     height={48}
-                    rotationType={'down'}
+                    rotationType="down"
                   />
                 ) : (
                   <Pai key={pai} no={pai} height={48} />
@@ -171,9 +167,8 @@ const ChiNotice = () => {
 };
 
 const NestedChiNotice = () => {
-  const { chiNotices, isChiNoticeNested, onClickNestedChiNotice } = useContext(
-    Context
-  );
+  const { chiNotices, isChiNoticeNested, onClickNestedChiNotice } =
+    useContext(Context);
   return (
     <>
       {isChiNoticeNested ? (
@@ -188,7 +183,7 @@ const NestedChiNotice = () => {
                     key={chiNotice.pai}
                     no={chiNotice.pai}
                     height={48}
-                    rotationType={'down'}
+                    rotationType="down"
                   />
                 ) : (
                   <Pai key={pai} no={pai} height={48} />
