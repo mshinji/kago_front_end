@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Constants } from './Constants';
-import { Context } from './Context';
+import { Context, HuroType } from './Context';
 import { Pai } from './Pai';
 
 const {
@@ -17,6 +17,62 @@ export const AgariResultField = () => {
 
   return agariInfo.yakus.length >= 1 ? (
     <Wrapper>
+      <Row>
+        <TehaiField>
+          {agariInfo.tehai.map((pai) => (
+            <Pai key={pai} no={pai} height={ResultPaiHeight} />
+          ))}
+        </TehaiField>
+        {agariInfo.huro.length > 0 ? (
+          <HuroField>
+            {agariInfo.huro
+              .slice(0)
+              .reverse()
+              .map((h, key) => (
+                <HuroWrapper key={key}>
+                  {h.type == 'ankan' &&
+                    h.pais.map((pai) => (
+                      <Pai key={pai} no={pai} height={ResultPaiHeight} />
+                    ))}
+                  {h.type == 'pon' && (
+                    <>
+                      {sortPais(h).map((pai) =>
+                        pai == h.pai ? (
+                          <Pai
+                            key={h.pai}
+                            no={h.pai}
+                            height={ResultPaiHeight}
+                            rotationType="down"
+                          />
+                        ) : (
+                          <Pai key={pai} no={pai} height={ResultPaiHeight} />
+                        )
+                      )}
+                    </>
+                  )}
+                  {h.type == 'chi' && (
+                    <>
+                      {sortPais(h).map((pai) =>
+                        pai == h.pai ? (
+                          <Pai
+                            key={h.pai}
+                            no={h.pai}
+                            height={ResultPaiHeight}
+                            rotationType="down"
+                          />
+                        ) : (
+                          <Pai key={pai} no={pai} height={ResultPaiHeight} />
+                        )
+                      )}
+                    </>
+                  )}
+                </HuroWrapper>
+              ))}
+          </HuroField>
+        ) : (
+          <></>
+        )}
+      </Row>
       <Row>
         <Dora>
           {agariInfo.doras.map((dora) => (
@@ -93,6 +149,12 @@ export const AgariResultField = () => {
   );
 };
 
+const sortPais = (huro: HuroType): number[] => {
+  const pais = huro.pais.filter((pai) => pai != huro.pai);
+  pais.splice(3 - ((huro.fromWho - huro.who + 4) % 4), 0, huro.pai);
+  return pais;
+};
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -119,6 +181,24 @@ const Col = styled.div`
   display: flex;
   flex-direction: column;
   width: ${AgariResultFieldWidth / 2}px;
+`;
+
+const TehaiField = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+`;
+
+const HuroField = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 10px 0;
+`;
+
+const HuroWrapper = styled.div`
+  display: flex;
+  margin-left: 12px;
 `;
 
 const Dora = styled.div`
