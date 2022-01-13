@@ -40,6 +40,8 @@ export const defaultGameInfo: GameInfoType = {
 };
 
 export type AgariInfoType = {
+  tehai: number[];
+  huro: HuroType[];
   yakus: { name: string; han: number }[];
   doras: number[];
   uradoras: number[];
@@ -48,6 +50,8 @@ export type AgariInfoType = {
 };
 
 export const defaultAgariInfo: AgariInfoType = {
+  tehai: [],
+  huro: [],
   yakus: [],
   doras: [],
   uradoras: [],
