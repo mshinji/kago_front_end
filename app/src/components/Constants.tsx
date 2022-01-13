@@ -21,8 +21,8 @@ export const Constants = {
   NoticeFieldHeight: 160 /* NoticeHeigth * 2 + 20*/,
   NoticeWidth: 100,
   NoticeHeight: 70,
-  AgariResultFieldWidth: 600,
-  AgariResultFieldHeight: 600,
+  AgariResultFieldWidth: 700,
+  AgariResultFieldHeight: 700,
   RyukyokuResultFieldWidth: 600,
   RyukyokuResultFieldHeight: 600,
   // 牌の大きさ
