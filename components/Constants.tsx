@@ -33,4 +33,4 @@ export const Constants = {
   HuroPaiHeight: 42,
   HyojiPaiHeight: 40,
   ResultPaiHeight: 52,
-};
+}

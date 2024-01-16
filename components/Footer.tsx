@@ -1,14 +1,12 @@
-import Link from 'next/link';
-import React from 'react';
-import styled from 'styled-components';
+import Link from 'next/link'
+import React from 'react'
+import styled from 'styled-components'
 
 export const Footer = () => {
   return (
     <Wrapper>
       <div>
-        <Link href="https://div.com/mshinji/kago_frontend">
-          github[frontend]
-        </Link>
+        <Link href="https://div.com/mshinji/kago_frontend">github[frontend]</Link>
       </div>
       <div>
         <Link href="https://div.com/mshinji/kago_backend">github[backend]</Link>
@@ -21,8 +19,8 @@ export const Footer = () => {
         <Link href="https://majandofu.com/mahjong-images">麻雀豆腐様</Link>
       </div>
     </Wrapper>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
   width: 100%;
@@ -30,4 +28,4 @@ const Wrapper = styled.div`
   flex-direction: column;
   align-items: center;
   color: white;
-`;
+`

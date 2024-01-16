@@ -1,14 +1,15 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
-import { Constants } from './Constants';
-import { Context } from './Context';
+import React, { useContext } from 'react'
+import styled from 'styled-components'
+
+import { Constants } from './Constants'
+import { Context } from './Context'
 
 interface PlayerInfoProps {
-  who: number;
+  who: number
 }
 
 export const PlayerInfo = (props: PlayerInfoProps) => {
-  const { gameInfo } = useContext(Context);
+  const { gameInfo } = useContext(Context)
   return (
     <Wrapper who={props.who}>
       <Row>
@@ -23,26 +24,18 @@ export const PlayerInfo = (props: PlayerInfoProps) => {
         <></>
       )}
     </Wrapper>
-  );
-};
+  )
+}
 
-const {
-  HyojiWidth,
-  HyojiHeight,
-  PlayerInfoWidth,
-  PlayerInfoHeight,
-  KyokuInfoWidth,
-  KyokuInfoHeight,
-} = Constants;
+const { HyojiWidth, HyojiHeight, PlayerInfoWidth, PlayerInfoHeight, KyokuInfoWidth, KyokuInfoHeight } = Constants
 
 const calcTranslateX = (who: number) =>
   [
     (HyojiWidth - KyokuInfoWidth) / 2,
     (HyojiWidth + KyokuInfoWidth - (PlayerInfoWidth - PlayerInfoHeight)) / 2,
     (HyojiWidth - KyokuInfoWidth) / 2,
-    (HyojiWidth - KyokuInfoWidth - (PlayerInfoWidth - PlayerInfoHeight)) / 2 -
-      PlayerInfoHeight,
-  ][who];
+    (HyojiWidth - KyokuInfoWidth - (PlayerInfoWidth - PlayerInfoHeight)) / 2 - PlayerInfoHeight,
+  ][who]
 
 const calcTranslateY = (who: number) =>
   [
@@ -50,9 +43,9 @@ const calcTranslateY = (who: number) =>
     (HyojiHeight - KyokuInfoHeight + (PlayerInfoWidth - PlayerInfoHeight)) / 2,
     (HyojiHeight - KyokuInfoHeight) / 2 - PlayerInfoHeight,
     (HyojiHeight - KyokuInfoHeight + (PlayerInfoWidth - PlayerInfoHeight)) / 2,
-  ][who];
+  ][who]
 
-const calcRotateDegree = (who: number) => who * -90;
+const calcRotateDegree = (who: number) => who * -90
 
 const Wrapper = styled.div.attrs((props: PlayerInfoProps) => ({
   who: props.who,
@@ -64,13 +57,10 @@ const Wrapper = styled.div.attrs((props: PlayerInfoProps) => ({
   width: ${PlayerInfoWidth}px;
   height: ${PlayerInfoHeight}px;
   /* background: gray; */
-  transform: translate(
-      ${(props) => calcTranslateX(props.who)}px,
-      ${(props) => calcTranslateY(props.who)}px
-    )
+  transform: translate(${(props) => calcTranslateX(props.who)}px, ${(props) => calcTranslateY(props.who)}px)
     rotate(${(props) => calcRotateDegree(props.who)}deg);
   transform-origin: center center 0;
-`;
+`
 
 const Row = styled.div`
   display: flex;
@@ -78,7 +68,7 @@ const Row = styled.div`
   align-items: center;
   width: 100%;
   padding: 4px;
-`;
+`
 
 const Kaze = styled.div`
   height: 20px;
@@ -87,18 +77,18 @@ const Kaze = styled.div`
   margin-right: 5px;
   background-color: orange;
   border-radius: 5px;
-`;
+`
 
 const Score = styled.div`
   height: 24px;
   line-height: 24px;
   color: white;
   font-weight: bold;
-`;
+`
 
 const Reach = styled.div`
   width: 100%;
   height: 12px;
   line-height: 12px;
   text-align: center;
-`;
+`

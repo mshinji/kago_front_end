@@ -1,17 +1,13 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
-import { Constants } from './Constants';
-import { Context } from './Context';
+import React, { useContext } from 'react'
+import styled from 'styled-components'
 
-const {
-  GameFieldWidth,
-  GameFieldHeight,
-  RyukyokuResultFieldWidth,
-  RyukyokuResultFieldHeight,
-} = Constants;
+import { Constants } from './Constants'
+import { Context } from './Context'
+
+const { GameFieldWidth, GameFieldHeight, RyukyokuResultFieldWidth, RyukyokuResultFieldHeight } = Constants
 
 export const RyukyokuResultField = () => {
-  const { ryukyokuInfo, onClickNextKyoku } = useContext(Context);
+  const { ryukyokuInfo, onClickNextKyoku } = useContext(Context)
 
   return ryukyokuInfo.scoreMovements.length === 4 ? (
     <Wrapper>
@@ -52,8 +48,8 @@ export const RyukyokuResultField = () => {
     </Wrapper>
   ) : (
     <></>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
   display: flex;
@@ -69,24 +65,24 @@ const Wrapper = styled.div`
   transform-origin: center center 0;
   background: rgba(0, 0, 0, 0.8);
   color: white;
-`;
+`
 
 const Title = styled.div`
   font-size: 32px;
-`;
+`
 
 const Row = styled.div`
   display: flex;
   justify-content: space-around;
   width: ${RyukyokuResultFieldWidth}px;
-`;
+`
 
 const ScoreField = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
-`;
+`
 
 const Score = styled.div`
   display: flex;
@@ -95,19 +91,19 @@ const Score = styled.div`
   padding: 5px 10px;
   background: tan;
   border-radius: 10px;
-`;
+`
 
 const CurrentScore = styled.div`
   font-size: 20px;
   font-weight: bold;
   color: white;
-`;
+`
 
 const ScoreMovement = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: red;
-`;
+`
 
 const NextKyoku = styled.div`
   width: ${RyukyokuResultFieldWidth / 2}px;
@@ -118,4 +114,4 @@ const NextKyoku = styled.div`
   background: white;
   color: black;
   text-align: center;
-`;
+`
