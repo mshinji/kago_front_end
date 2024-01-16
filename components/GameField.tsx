@@ -1,16 +1,17 @@
-import React from 'react';
-import styled from 'styled-components';
-import { AgariResultField } from './AgariResultField';
-import { Constants } from './Constants';
-import { Huro } from './Huro';
-import { Hyoji } from './Hyoji';
-import { Kawa } from './Kawa';
-import { NoticeField } from './NoticeField';
-import { RyukyokuResultField } from './RyukyokuResultField';
-import { SyukyokuResultField } from './SyukyokuResultField';
-import { Tehai } from './Tehai';
+import React from 'react'
+import styled from 'styled-components'
 
-const { GameFieldHeight, GameFieldWidth } = Constants;
+import { AgariResultField } from './AgariResultField'
+import { Constants } from './Constants'
+import { Huro } from './Huro'
+import { Hyoji } from './Hyoji'
+import { Kawa } from './Kawa'
+import { NoticeField } from './NoticeField'
+import { RyukyokuResultField } from './RyukyokuResultField'
+import { SyukyokuResultField } from './SyukyokuResultField'
+import { Tehai } from './Tehai'
+
+const { GameFieldHeight, GameFieldWidth } = Constants
 
 export const GameField = () => {
   return (
@@ -33,8 +34,8 @@ export const GameField = () => {
       <RyukyokuResultField />
       <SyukyokuResultField />
     </Wrapper>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
   width: ${GameFieldWidth}px;
@@ -42,4 +43,4 @@ const Wrapper = styled.div`
   z-index: 0;
   background-color: darkslategray;
   margin-bottom: 10px;
-`;
+`

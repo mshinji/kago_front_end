@@ -1,23 +1,18 @@
-import React, { useContext } from 'react';
-import styled from 'styled-components';
-import { Constants } from './Constants';
-import { Context } from './Context';
-import { Pai } from './Pai';
+import React, { useContext } from 'react'
+import styled from 'styled-components'
 
-const {
-  GameFieldWidth,
-  GameFieldHeight,
-  TehaiWidth,
-  TehaiHeight,
-  TehaiPaiHeight,
-} = Constants;
+import { Constants } from './Constants'
+import { Context } from './Context'
+import { Pai } from './Pai'
+
+const { GameFieldWidth, GameFieldHeight, TehaiWidth, TehaiHeight, TehaiPaiHeight } = Constants
 
 interface TehaiProps {
-  who: number;
+  who: number
 }
 
 export const Tehai = (props: TehaiProps) => {
-  const { gameInfo, richiDeclareNotices, onClickDahai } = useContext(Context);
+  const { gameInfo, richiDeclareNotices, onClickDahai } = useContext(Context)
 
   return (
     <Wrapper who={props.who}>
@@ -35,8 +30,8 @@ export const Tehai = (props: TehaiProps) => {
         />
       ))}
     </Wrapper>
-  );
-};
+  )
+}
 
 const calcTranslateX = (who: number) =>
   [
@@ -44,7 +39,7 @@ const calcTranslateX = (who: number) =>
     GameFieldWidth - (TehaiWidth + TehaiHeight) / 2,
     (GameFieldWidth - TehaiWidth - TehaiHeight) / 2,
     (TehaiHeight - TehaiWidth) / 2,
-  ][who];
+  ][who]
 
 const calcTranslateY = (who: number) =>
   [
@@ -52,9 +47,9 @@ const calcTranslateY = (who: number) =>
     GameFieldHeight - TehaiWidth / 2 - TehaiHeight * 1.5,
     0,
     (TehaiWidth + TehaiHeight) / 2,
-  ][who];
+  ][who]
 
-const calcRotateDegree = (who: number) => who * -90;
+const calcRotateDegree = (who: number) => who * -90
 
 const Wrapper = styled.div.attrs((props: TehaiProps) => ({
   who: props.who,
@@ -64,10 +59,7 @@ const Wrapper = styled.div.attrs((props: TehaiProps) => ({
   position: absolute;
   width: ${TehaiWidth}px;
   height: ${TehaiHeight}px;
-  transform: translate(
-      ${(props) => calcTranslateX(props.who)}px,
-      ${(props) => calcTranslateY(props.who)}px
-    )
+  transform: translate(${(props) => calcTranslateX(props.who)}px, ${(props) => calcTranslateY(props.who)}px)
     rotate(${(props) => calcRotateDegree(props.who)}deg);
   transform-origin: center center 0;
-`;
+`
