@@ -1,7 +1,9 @@
+'use client';
+
 import { Howl } from 'howler';
 import React, { useCallback, useEffect, useState } from 'react';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
-import { Constants } from '~/src/components/Constants';
+import { Constants } from '~/components/Constants';
 import {
   AgariInfoType,
   Context,
@@ -13,8 +15,8 @@ import {
   NoticeType,
   RyukyokuInfoType,
   SyukyokuInfoType,
-} from '~/src/components/Context';
-import { Template } from '~/src/components/Template';
+} from '~/components/Context';
+import { Template } from '~/components/Template';
 
 type DataType = {
   type: string;
