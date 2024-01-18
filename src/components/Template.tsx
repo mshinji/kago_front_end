@@ -1,12 +1,9 @@
 import styled from 'styled-components'
 
-import { Constants } from './Constants'
 import { Footer } from './Footer'
 import { GameField } from './GameField'
 import { Header } from './Header'
 import { ModeSelect } from './ModeSelect'
-
-const { TemplateWidth } = Constants
 
 export const Template = () => {
   return (
