@@ -15,7 +15,8 @@
     "lint": "eslint --fix .",
     "format": "prettier --write .",
     "format:ci": "prettier --check .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "upgrade-interactive": "npx npm-check --update"
   },
   "dependencies": {
     "howler": "^2.2.4",
