@@ -228,7 +228,7 @@ const NestedNoticeWrapper = styled.div`
   margin: 5px 0;
 `
 
-const Notice = styled.div.attrs((props: { visible: boolean }) => ({
+const Notice = styled.div.attrs<{ visible: boolean }>((props) => ({
   visible: props.visible,
 }))`
   display: ${(props) => (props.visible ? 'block' : 'none')};
