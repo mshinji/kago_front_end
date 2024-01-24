@@ -16,11 +16,26 @@ import {
   defaultSyukyokuInfo,
 } from '~/components/Context'
 import { Template } from '~/components/Template'
-
-type DataType = {
-  type: string
-  body: any
-}
+import {
+  AnkanNoticeResponse,
+  AnkanResponse,
+  ChiNoticeResponse,
+  ChiResponse,
+  DahaiResponse,
+  OpenDoraResponse,
+  PonNoticeResponse,
+  PonResponse,
+  Response,
+  RichiBendResponse,
+  RichiCompleteResponse,
+  RichiDeclareNoticeResponse,
+  RonhoResponse,
+  RyukyokuResponse,
+  StartKyokuResponse,
+  SyukyokuResponse,
+  TsumoResponse,
+  TsumohoResponse,
+} from '~/types/response'
 
 const url = import.meta.env.BACKEND_URL || 'ws://localhost:8000'
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`)
@@ -198,7 +213,7 @@ const Page = () => {
     await setIsChiNoticeNested(false)
   }
 
-  const startKyoku = async (body: GameInfoType): Promise<void> => {
+  const startKyoku = async ({ body }: StartKyokuResponse): Promise<void> => {
     await setGameInfo(body)
     await setAgariInfo(defaultAgariInfo)
     await setRyukyokuInfo(defaultRyukyokuInfo)
@@ -212,11 +227,11 @@ const Page = () => {
     await setRichiNotices(true)
   }
 
-  const richiDeclareNotice = async (body: NoticeType): Promise<void> => {
+  const richiDeclareNotice = async ({ body }: RichiDeclareNoticeResponse): Promise<void> => {
     await setRichiDeclareNotices(body)
   }
 
-  const ankanNotice = async (body: NoticeType): Promise<void> => {
+  const ankanNotice = async ({ body }: AnkanNoticeResponse): Promise<void> => {
     await setAnkanNotices(body)
   }
 
@@ -224,20 +239,20 @@ const Page = () => {
     await setRonhoNotices(true)
   }
 
-  const ponNotice = async (body: NoticeType): Promise<void> => {
+  const ponNotice = async ({ body }: PonNoticeResponse): Promise<void> => {
     await setPonNotices(body)
   }
 
-  const chiNotice = async (body: NoticeType): Promise<void> => {
+  const chiNotice = async ({ body }: ChiNoticeResponse): Promise<void> => {
     await setChiNotices(body)
   }
 
-  const tsumoho = async (body: AgariInfoType): Promise<void> => {
+  const tsumoho = async ({ body }: TsumohoResponse): Promise<void> => {
     await tsumohoSound.play()
     await setAgariInfo(body)
   }
 
-  const tsumo = async (body: { pai: number; dummy: number; who: number; rest: number }): Promise<void> => {
+  const tsumo = async ({ body }: TsumoResponse): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo))
       body.pai !== undefined
@@ -248,7 +263,7 @@ const Page = () => {
     })
   }
 
-  const dahai = async (body: { pai: number; dummy: number; who: number }): Promise<void> => {
+  const dahai = async ({ body }: DahaiResponse): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo))
       tmpGameInfo.tehais[body.who] = tmpGameInfo.tehais[body.who].filter((n) => n !== body.pai && n !== body.dummy)
@@ -258,7 +273,7 @@ const Page = () => {
     })
   }
 
-  const richiBend = async (body: { pai: number; voice: boolean }): Promise<void> => {
+  const richiBend = async ({ body }: RichiBendResponse): Promise<void> => {
     if (body.voice) {
       await richiSound.play()
     }
@@ -269,7 +284,7 @@ const Page = () => {
     })
   }
 
-  const richiComplete = async (body: { scores: number[]; richis: boolean[] }): Promise<void> => {
+  const richiComplete = async ({ body }: RichiCompleteResponse): Promise<void> => {
     await setGameInfo((preGameInfo) => {
       const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo))
       tmpGameInfo.scores = body.scores
@@ -278,7 +293,7 @@ const Page = () => {
     })
   }
 
-  const ankan = async (body: { pais: number[]; dummies: number[]; who: number }): Promise<void> => {
+  const ankan = async ({ body }: AnkanResponse): Promise<void> => {
     await kanSound.play()
     await setGameInfo((preGameInfo) => {
       const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo))
@@ -296,18 +311,12 @@ const Page = () => {
     })
   }
 
-  const ronho = async (body: AgariInfoType): Promise<void> => {
+  const ronho = async ({ body }: RonhoResponse): Promise<void> => {
     await ronhoSound.play()
     await setAgariInfo(body)
   }
 
-  const pon = async (body: {
-    pai: number
-    pais: number[]
-    dummies: number[]
-    who: number
-    fromWho: number
-  }): Promise<void> => {
+  const pon = async ({ body }: PonResponse): Promise<void> => {
     await ponSound.play()
     await setGameInfo((preGameInfo) => {
       const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo))
@@ -326,13 +335,7 @@ const Page = () => {
     })
   }
 
-  const chi = async (body: {
-    pai: number
-    pais: number[]
-    dummies: number[]
-    who: number
-    fromWho: number
-  }): Promise<void> => {
+  const chi = async ({ body }: ChiResponse): Promise<void> => {
     await chiSound.play()
     await setGameInfo((preGameInfo) => {
       const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo))
@@ -351,7 +354,7 @@ const Page = () => {
     })
   }
 
-  const openDora = async (body: { pai: number; dummy: number; rest: number }) => {
+  const openDora = async ({ body }: OpenDoraResponse) => {
     await setGameInfo((preGameInfo) => {
       const tmpGameInfo: GameInfoType = JSON.parse(JSON.stringify(preGameInfo))
       tmpGameInfo.dora = tmpGameInfo.dora.map((n) => (n === body.dummy ? body.pai : n))
@@ -360,11 +363,11 @@ const Page = () => {
     })
   }
 
-  const ryukyoku = async (body: RyukyokuInfoType): Promise<void> => {
+  const ryukyoku = async ({ body }: RyukyokuResponse): Promise<void> => {
     await setRyukyokuInfo(body)
   }
 
-  const syukyoku = async (body: SyukyokuInfoType): Promise<void> => {
+  const syukyoku = async ({ body }: SyukyokuResponse): Promise<void> => {
     await setAgariInfo(defaultAgariInfo)
     await setRyukyokuInfo(defaultRyukyokuInfo)
     await setSyukyokuInfo(body)
@@ -372,7 +375,7 @@ const Page = () => {
 
   const onMessage = useCallback(
     async (event: IMessageEvent): Promise<void> => {
-      const datas: DataType[] = JSON.parse(event.data as string)
+      const datas: Response[] = JSON.parse(event.data as string)
       if (datas.length === 0) return
       console.log('receive:', datas)
 
@@ -383,56 +386,56 @@ const Page = () => {
         // 受信対応
         switch (data.type) {
           case 'start_kyoku_message':
-            await startKyoku(data.body)
+            await startKyoku(data)
             break
           case 'tsumoho_message':
             await wait(300)
-            await tsumoho(data.body)
+            await tsumoho(data)
             break
           case 'tsumo_message':
             if (myPrevAction !== 'cancel') {
               await wait(300)
             }
-            await tsumo(data.body)
+            await tsumo(data)
             break
           case 'ankan_message':
-            await ankan(data.body)
+            await ankan(data)
             break
           case 'dahai_message':
             if (data.body.who != 0 && selectedMode !== AutoMode) {
               await wait(300)
             }
-            await dahai(data.body)
+            await dahai(data)
             break
           case 'richi_bend_message':
-            await richiBend(data.body)
+            await richiBend(data)
             break
           case 'richi_complete_message':
-            await richiComplete(data.body)
+            await richiComplete(data)
             break
           case 'ronho_message':
             await wait(300)
-            await ronho(data.body)
+            await ronho(data)
             break
           case 'pon_message':
             await wait(300)
-            await pon(data.body)
+            await pon(data)
             await wait(300)
             break
           case 'chi_message':
             await wait(300)
-            await chi(data.body)
+            await chi(data)
             await wait(300)
             break
           case 'open_dora_message':
-            await openDora(data.body)
+            await openDora(data)
             break
           case 'ryukyoku_message':
             await wait(300)
-            await ryukyoku(data.body)
+            await ryukyoku(data)
             break
           case 'syukyoku_message':
-            await syukyoku(data.body)
+            await syukyoku(data)
             break
           // 通知
           case 'tsumoho_notice_message':
@@ -445,16 +448,16 @@ const Page = () => {
             await richiNotice()
             break
           case 'richi_declare_notice_message':
-            await richiDeclareNotice(data.body)
+            await richiDeclareNotice(data)
             break
           case 'ankan_notice_message':
-            await ankanNotice(data.body)
+            await ankanNotice(data)
             break
           case 'pon_notice_message':
-            await ponNotice(data.body)
+            await ponNotice(data)
             break
           case 'chi_notice_message':
-            await chiNotice(data.body)
+            await chiNotice(data)
             break
         }
       }
