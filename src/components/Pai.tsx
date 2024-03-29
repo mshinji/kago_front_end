@@ -45,7 +45,7 @@ export const Pai = (props: PaiProps) => {
   return (
     <Wrapper {...props} width={props.rotationType ? height : width}>
       <img
-        src={`/static/images/pai${no}.png`}
+        src={`./images/pai${no}.png`}
         width={width}
         height={props.height}
         style={customStyle}
