@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { Constants } from './Constants';
 import { Context } from './Context';
@@ -54,7 +54,7 @@ const calcTranslateY = (who: number) =>
 
 const calcRotateDegree = (who: number) => who * -90;
 
-const Wrapper = styled.div.attrs((props: PlayerInfoProps) => ({
+const Wrapper = styled.div.attrs<PlayerInfoProps>((props) => ({
   who: props.who,
 }))`
   display: flex;

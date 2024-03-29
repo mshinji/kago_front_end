@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Constants } from './Constants';
 
@@ -55,8 +54,8 @@ export const Pai = (props: PaiProps) => {
   );
 };
 
-const Wrapper = styled.div.attrs(
-  ({ width, height }: { width: number; height: number }) => ({
+const Wrapper = styled.div.attrs<{ width: number; height: number }>(
+  ({ width, height }) => ({
     width: width,
     height: height,
   })

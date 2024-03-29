@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { Constants } from './Constants';
 import { Context, HuroType } from './Context';
@@ -91,7 +91,7 @@ const calcTranslateY = (who: number) =>
 
 const calcRotateDegree = (who: number) => who * -90;
 
-const Wrapper = styled.div.attrs((props: TehaiProps) => ({
+const Wrapper = styled.div.attrs<TehaiProps>((props) => ({
   who: props.who,
 }))`
   display: flex;
