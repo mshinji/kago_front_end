@@ -111,6 +111,6 @@ const Wrapper = styled.div.attrs<TehaiProps>((props) => ({
 `;
 
 const HuroWrapper = styled.div`
-  display: felx;
+  display: flex;
   margin-left: 12px;
 `;
