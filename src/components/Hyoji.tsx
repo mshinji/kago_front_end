@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Constants } from './Constants';
 import { KyokuInfo } from './KyokuInfo';
