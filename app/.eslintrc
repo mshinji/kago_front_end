@@ -1,0 +1,45 @@
+{
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "overrides": [
+    {
+      "files": ["src/**/*.{js,jsx,ts,tsx}"],
+      "rules": {
+        "import/order": [
+          "error",
+          {
+            "groups": [
+              "builtin",
+              "external",
+              "parent",
+              "sibling",
+              "index",
+              "object",
+              "type"
+            ],
+            "pathGroups": [
+              {
+                "pattern": "~/**",
+                "group": "parent",
+                "position": "before"
+              }
+            ],
+            "alphabetize": {
+              "order": "asc"
+            },
+            "newlines-between": "never"
+          }
+        ]
+      }
+    }
+  ]
+}
