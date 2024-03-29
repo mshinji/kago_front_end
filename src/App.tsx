@@ -21,7 +21,7 @@ type DataType = {
   body: any;
 };
 
-const url: string = import.meta.env.BACKEND_URL || 'ws://localhost:8000';
+const url: string = import.meta.env.VITE_BACKEND_URL || 'ws://localhost:8000';
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`);
 const tsumohoSound = new Howl({ src: ['./sounds/tsumoho.m4a'] });
 const ronhoSound = new Howl({ src: ['./sounds/ronho.m4a'] });
