@@ -62,7 +62,7 @@ const calcTranslateY = (who: number) =>
 
 const calcRotateDegree = (who: number) => who * -90;
 
-const Wrapper = styled.div.attrs((props: KawaProps) => ({
+const Wrapper = styled.div.attrs<KawaProps>((props) => ({
   who: props.who,
 }))`
   display: flex;
