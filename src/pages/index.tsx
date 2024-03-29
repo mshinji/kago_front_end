@@ -535,7 +535,7 @@ const Page = () => {
         onClickNextKyoku,
       }}
     >
-      <Template></Template>
+      <Template />
     </Context.Provider>
   );
 };
