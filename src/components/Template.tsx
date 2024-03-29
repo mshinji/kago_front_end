@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { Constants } from './Constants';
 import { Footer } from './Footer';
@@ -25,6 +24,6 @@ const Wrapper = styled.div`
   align-items: center;
   width: 100%;
   min-width: ${TemplateWidth}px;
-  min-height: 100%;
+  min-height: 100vh;
   background: black;
 `;

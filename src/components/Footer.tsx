@@ -1,5 +1,3 @@
-import Link from 'next/link';
-import React from 'react';
 import styled from 'styled-components';
 
 export const Footer = () => {
@@ -7,7 +5,7 @@ export const Footer = () => {
     <Wrapper>
       <div>
         画像素材:
-        <Link href="https://majandofu.com/mahjong-images">麻雀豆腐様</Link>
+        <a href="https://majandofu.com/mahjong-images">麻雀豆腐</a>様
       </div>
     </Wrapper>
   );

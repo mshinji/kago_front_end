@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { Constants } from './Constants';
 import { Context } from './Context';

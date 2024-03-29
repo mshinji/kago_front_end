@@ -1,5 +1,5 @@
 import { Howl } from 'howler';
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { IMessageEvent, w3cwebsocket } from 'websocket';
 import { Constants } from '~/src/components/Constants';
 import {
@@ -21,7 +21,7 @@ type DataType = {
   body: any;
 };
 
-const url: string = process.env.BACKEND_URL || 'ws://localhost:8000';
+const url: string = import.meta.env.BACKEND_URL || 'ws://localhost:8000';
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`);
 const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
 const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
