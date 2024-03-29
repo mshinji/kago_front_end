@@ -17,7 +17,7 @@ export const PlayerInfo = (props: PlayerInfoProps) => {
       </Row>
       {gameInfo.richis[props.who] ? (
         <Reach>
-          <img src={`/static/images/bou0.png`} />
+          <img src={`./images/bou0.png`} />
         </Reach>
       ) : (
         <></>

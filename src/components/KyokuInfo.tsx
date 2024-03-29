@@ -31,7 +31,7 @@ export const KyokuInfo = () => {
       </Dora>
       <Kyotaku>
         <img
-          src="/static/images/bou0.png"
+          src="./images/bou0.png"
           width={Math.floor(KyokuInfoWidth * 0.6)}
           style={{ paddingRight: '5px' }}
         />
@@ -39,7 +39,7 @@ export const KyokuInfo = () => {
       </Kyotaku>
       <Tsumibou>
         <img
-          src="/static/images/bou1.png"
+          src="./images/bou1.png"
           width={Math.floor(KyokuInfoWidth * 0.6)}
           style={{ paddingRight: '5px' }}
         />

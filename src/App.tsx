@@ -23,12 +23,12 @@ type DataType = {
 
 const url: string = import.meta.env.BACKEND_URL || 'ws://localhost:8000';
 const ws = new w3cwebsocket(`${url}/ws/mahjong/`);
-const tsumohoSound = new Howl({ src: ['/static/sounds/tsumoho.m4a'] });
-const ronhoSound = new Howl({ src: ['/static/sounds/ronho.m4a'] });
-const richiSound = new Howl({ src: ['/static/sounds/richi.m4a'] });
-const kanSound = new Howl({ src: ['/static/sounds/kan.m4a'] });
-const ponSound = new Howl({ src: ['/static/sounds/pon.m4a'] });
-const chiSound = new Howl({ src: ['/static/sounds/chi.m4a'] });
+const tsumohoSound = new Howl({ src: ['./sounds/tsumoho.m4a'] });
+const ronhoSound = new Howl({ src: ['./sounds/ronho.m4a'] });
+const richiSound = new Howl({ src: ['./sounds/richi.m4a'] });
+const kanSound = new Howl({ src: ['./sounds/kan.m4a'] });
+const ponSound = new Howl({ src: ['./sounds/pon.m4a'] });
+const chiSound = new Howl({ src: ['./sounds/chi.m4a'] });
 
 const { AutoMode } = Constants;
 
