@@ -1,9 +1,10 @@
-import styled from 'styled-components';
-import { Constants } from './Constants';
-import { KyokuInfo } from './KyokuInfo';
-import { PlayerInfo } from './PlayerInfo';
+import styled from 'styled-components'
 
-const { GameFieldWidth, GameFieldHeight, HyojiWidth, HyojiHeight } = Constants;
+import { Constants } from './Constants'
+import { KyokuInfo } from './KyokuInfo'
+import { PlayerInfo } from './PlayerInfo'
+
+const { GameFieldWidth, GameFieldHeight, HyojiWidth, HyojiHeight } = Constants
 
 export const Hyoji = () => {
   return (
@@ -14,17 +15,14 @@ export const Hyoji = () => {
       <PlayerInfo who={2} />
       <PlayerInfo who={3} />
     </Wrapper>
-  );
-};
+  )
+}
 
 const Wrapper = styled.div`
   position: absolute;
   width: ${HyojiWidth}px;
   height: ${HyojiHeight}px;
   background: navy;
-  transform: translate(
-    ${(GameFieldWidth - HyojiWidth) / 2}px,
-    ${(GameFieldHeight - HyojiHeight) / 2}px
-  );
+  transform: translate(${(GameFieldWidth - HyojiWidth) / 2}px, ${(GameFieldHeight - HyojiHeight) / 2}px);
   transform-origin: center center 0;
-`;
+`
